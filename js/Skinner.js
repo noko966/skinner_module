@@ -261,6 +261,8 @@ class Skinner {
           ? _config[_essence].variation
           : this.configOrder[i].variation;
     }
+
+    console.log(_mergedConfig);
     return _mergedConfig;
   }
 
@@ -272,11 +274,10 @@ class Skinner {
     if (fbEssence) {
       _vbf = this.verbalData(fbEssence);
       _isDark = _vbf.isDark;
+      this.skin[_vb.isDark] = _isDark;
     }
 
-    this.skin[_vb.isDark] = _isDark;
-
-    this.skin[_vb.nameBg2] = _isDark
+    this.skin[_vb.nameBg2] = this.skin[_vb.isDark]
       ? this.tinycolor(this.skin[_vb.nameBg])
           .darken(this.defaults.dark.bg2)
           .toString()
@@ -284,7 +285,7 @@ class Skinner {
           .lighten(this.defaults.light.bg2)
           .toString();
 
-    this.skin[_vb.nameBg3] = _isDark
+    this.skin[_vb.nameBg3] = this.skin[_vb.isDark]
       ? this.tinycolor(this.skin[_vb.nameBg2])
           .darken(this.defaults.dark.bg3)
           .toString()
@@ -292,7 +293,7 @@ class Skinner {
           .lighten(this.defaults.light.bg3)
           .toString();
 
-    this.skin[_vb.nameBgHov] = _isDark
+    this.skin[_vb.nameBgHov] = this.skin[_vb.isDark]
       ? this.tinycolor(this.skin[_vb.nameBg])
           .darken(this.defaults.dark.bgHov)
           .toString()
@@ -300,7 +301,7 @@ class Skinner {
           .lighten(this.defaults.light.bgHov)
           .toString();
 
-    this.skin[_vb.nameBg2Hov] = _isDark
+    this.skin[_vb.nameBg2Hov] = this.skin[_vb.isDark]
       ? this.tinycolor(this.skin[_vb.nameBg2])
           .darken(this.defaults.dark.bgHov)
           .toString()
@@ -308,7 +309,7 @@ class Skinner {
           .lighten(this.defaults.light.bgHov)
           .toString();
 
-    this.skin[_vb.nameBg3Hov] = _isDark
+    this.skin[_vb.nameBg3Hov] = this.skin[_vb.isDark]
       ? this.tinycolor(this.skin[_vb.nameBg3])
           .darken(this.defaults.dark.bgHov)
           .toString()
@@ -389,15 +390,15 @@ class Skinner {
       .toRgbString();
   }
 
-  generateBorderss(essence) {
+  generateBorderss(essence, fbEssence) {
     let _essence = essence;
     let _vb = this.verbalData(_essence);
-    let _isCustomBorderActive = this.skin[_vb.isCustomBorder];
-    let _customBorderColor = this.skin[_vb.nameBorder];
-    if (_isCustomBorderActive) {
-      this.skin[_vb.nameBorder] = _customBorderColor;
+    let _vbf;
+    if (fbEssence) {
+      _vbf = this.verbalData(fbEssence);
+      this.skin[_vb.nameBorder] = this.skin[_vbf.nameBorder];
     } else {
-      this.skin[_vb.nameBorder] = this.skin.bodyBg;
+      this.skin[_vb.nameBorder] = this.skin[_vb.nameBgHov];
     }
   }
 
@@ -500,6 +501,7 @@ class Skinner {
       this.skin[_vd.isName] = true;
     }
 
+    this.skin[_vd.isName] = _config[_essence].Background.isActive;
     let isActive = this.skin[_vd.isName];
 
     if (isActive) {

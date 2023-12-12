@@ -26,7 +26,8 @@
       }
 
       .wrapper > div {
-        width: 25%;
+        /* width: 25%; */
+        width: 50%;
       }
 
       .skinner_essence_tint {
@@ -63,6 +64,8 @@
       .skinner_essence_tints_wrapper {
         display: flex;
         flex-direction: column;
+        padding: 8px;
+        border-radius: 4px;
       }
 
       .skinner_essence_heading {
@@ -70,7 +73,7 @@
         display: flex;
         align-items: center;
         font-size: 1.6em;
-        margin-bottom: 0.8em;
+        margin-bottom: 8px;
         font-weight: 700;
         text-transform: capitalize;
       }
@@ -79,7 +82,7 @@
         display: flex;
         align-items: center;
         flex-direction: column;
-        padding: 8px 0;
+        padding: 8px;
         justify-content: space-between;
       }
 
@@ -88,9 +91,9 @@
         align-items: center;
         justify-content: center;
         font-weight: 500;
-        font-size: 0.9em;
+        font-size: 1.2em;
         width: 100%;
-        height: 32px;
+        height: 44px;
         flex-shrink: 0;
         margin-bottom: 4px;
       }
@@ -155,6 +158,7 @@
 
       let essenceTintWrapper = document.createElement("div");
       essenceTintWrapper.className = "skinner_essence_tints_wrapper";
+      essenceTintWrapper.style.background = `var(--${vd["nameBg"]})`;
       essenceCont.appendChild(essenceTintWrapper);
 
       for (let i = 0; i < bgArr.length; i++) {
@@ -192,6 +196,7 @@
 
       let rgbaWrapper = document.createElement("div");
       rgbaWrapper.className = "skinner_essence_tint_with_opacity";
+      rgbaWrapper.style.background = `linear-gradient(90deg, var(--${vd.nameBg2}), var(--${vd.nameBg3}), var(--${vd.nameBg2}))`;
       //   rgbaWrapper.style.background = `var(--${vd["nameBg"]})`;
       let RGBAArr = [
         // "nameRGBATransparent",
@@ -204,6 +209,8 @@
         rgbaEl.className = "skinner_essence_tint_with_opacity_element";
         rgbaEl.innerText = `RGBA ${j + 1}`;
         rgbaEl.style.background = `var(--${vd[RGBAArr[j]]})`;
+        rgbaEl.style.border = `1px solid var(--${vd.nameBorder})`;
+
         rgbaEl.style.color = `var(--${vd["nameTxt"]})`;
         rgbaEl.style.borderRadius = `var(--${vd.nameRadius})`;
         rgbaWrapper.appendChild(rgbaEl);
@@ -230,33 +237,22 @@
       essenceTintWrapper.appendChild(item);
     }
 
-    // let builderConfig = {
-    //     body: {
-    //         Background: {
-    //             color: '#1a1a1a ',
-    //             isDark: false
-    //         },
-    //         Text: {
-    //             color: '#ffffff'
-    //         }
-    //     },
-    //     accent: {
-    //         Background: {
-    //             color: '#ffb700  '
-    //         },
-    //         Text: {
-    //             color: '#000000'
-    //         }
-    //     },
-
-    // }
-
     let builderConfig = {
       light: {
         body: {
           Background: {
             color: "#fff",
-            isDark: tinycolor("#fff").isDark(),
+            isDark: !tinycolor("#fff").isDark(),
+          },
+          Text: {
+            color: "#000000",
+          },
+        },
+        dominant: {
+          Background: {
+            isActive: true,
+            color: "#c3cddb",
+            isDark: !tinycolor("#c3cddb").isDark(),
           },
           Text: {
             color: "#000000",
@@ -265,7 +261,7 @@
         accent: {
           Background: {
             color: "#194686",
-            isDark: tinycolor("#194686").isDark(),
+            isDark: !tinycolor("#194686").isDark(),
           },
           Text: {
             color: "#ffffff",
@@ -276,7 +272,7 @@
         body: {
           Background: {
             color: "#1a1a1a ",
-            isDark: tinycolor("#1a1a1a").isDark(),
+            isDark: !tinycolor("#1a1a1a").isDark(),
           },
           Text: {
             color: "#ffffff",
@@ -285,7 +281,7 @@
         accent: {
           Background: {
             color: "#ffb700",
-            isDark: tinycolor("#ffb700").isDark(),
+            isDark: !tinycolor("#ffb700").isDark(),
           },
           Text: {
             color: "#000000",
@@ -296,7 +292,7 @@
         body: {
           Background: {
             color: "#1e3a5f ",
-            isDark: tinycolor("#1e3a5f").isDark(),
+            isDark: !tinycolor("#1e3a5f").isDark(),
           },
           Text: {
             color: "#d0e0f0",
@@ -305,7 +301,7 @@
         accent: {
           Background: {
             color: "#4fb3bf",
-            isDark: tinycolor("#4fb3bf").isDark(),
+            isDark: !tinycolor("#4fb3bf").isDark(),
           },
           Text: {
             color: "#ffffff",
