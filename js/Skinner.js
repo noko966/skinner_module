@@ -161,19 +161,19 @@ class Skinner {
 
     this.defaults = {
       dark: {
-        bg2: 10,
-        bg3: 15,
-        bgHov: 5,
+        bg2: 8,
+        bg3: 8,
+        bgHov: 3,
       },
       light: {
-        bg2: 10,
-        bg3: 15,
-        bgHov: 5,
+        bg2: 8,
+        bg3: 8,
+        bgHov: 3,
       },
       alpha: {
-        bg: 0.7,
-        bg2: 0.5,
-        bg3: 0.3,
+        bg: 0.6,
+        bg2: 0.4,
+        bg3: 0.2,
       },
       txt: {
         txt: 0.9,
@@ -183,12 +183,6 @@ class Skinner {
     };
 
     this.mergedConfig = this.mergeConfig(this._config);
-
-    
-
-    // console.log(this.mergedConfig);
-
-    // this.generateInitialSkin();
 
     this.modifyKey = this.modifyKey.bind(this);
     this.mergeConfig = this.mergeConfig.bind(this);
@@ -202,11 +196,11 @@ class Skinner {
   }
 
   getConfigOrder() {
-    return this.configOrder
+    return this.configOrder;
   }
 
-  getVerbalDataGenerator(){
-    return this.verbalData
+  getVerbalDataGenerator() {
+    return this.verbalData;
   }
 
   mergeConfig(config) {
@@ -217,7 +211,6 @@ class Skinner {
       let _essence = this.configOrder[i].name;
       let _configBlueprint = {
         Background: {
-          isDark: false,
           isActive: false,
           color: "#19C950",
         },
@@ -271,10 +264,17 @@ class Skinner {
     return _mergedConfig;
   }
 
-  generateBackgrounds(essence) {
+  generateBackgrounds(essence, fbEssence) {
     let _essence = essence;
     let _vb = this.verbalData(_essence);
-    let _isDark = this.skin[_vb.isDark];
+    let _vbf, _isDark;
+
+    if (fbEssence) {
+      _vbf = this.verbalData(fbEssence);
+      _isDark = _vbf.isDark;
+    }
+
+    this.skin[_vb.isDark] = _isDark;
 
     this.skin[_vb.nameBg2] = _isDark
       ? this.tinycolor(this.skin[_vb.nameBg])
@@ -285,10 +285,10 @@ class Skinner {
           .toString();
 
     this.skin[_vb.nameBg3] = _isDark
-      ? this.tinycolor(this.skin[_vb.nameBg])
+      ? this.tinycolor(this.skin[_vb.nameBg2])
           .darken(this.defaults.dark.bg3)
           .toString()
-      : this.tinycolor(this.skin[_vb.nameBg])
+      : this.tinycolor(this.skin[_vb.nameBg2])
           .lighten(this.defaults.light.bg3)
           .toString();
 
@@ -316,6 +316,9 @@ class Skinner {
           .lighten(this.defaults.light.bgHov)
           .toString();
 
+    this.skin[_vb.nameRGBATransparent] = this.tinycolor(this.skin[_vb.nameBg])
+      .setAlpha(0)
+      .toRgbString();
     this.skin[_vb.nameRGBA] = this.tinycolor(this.skin[_vb.nameBg])
       .setAlpha(this.defaults.alpha.bg)
       .toRgbString();
@@ -353,7 +356,11 @@ class Skinner {
         .setAlpha(this.defaults.txt.txt)
         .toRgbString();
     } else {
-        this.skin[_vb.nameTxt] = this.tinycolor(this.mergedConfig[_essence].Text.color).setAlpha(this.defaults.txt.txt).toRgbString();
+      this.skin[_vb.nameTxt] = this.tinycolor(
+        this.mergedConfig[_essence].Text.color
+      )
+        .setAlpha(this.defaults.txt.txt)
+        .toRgbString();
     }
 
     this.skin[_vb.nameTxt2] = this.tinycolor(this.skin[_vb.nameTxt])
@@ -375,7 +382,11 @@ class Skinner {
       this.skin[_vb.nameAccent] =
         this.skin.accentBg || this.mergedConfig.accent.Background.color;
     }
-    this.skin[_vb.nameAccentTxt] = this.tinycolor(this.mergedConfig.accent.Text.color).setAlpha(this.defaults.txt.txt).toRgbString();
+    this.skin[_vb.nameAccentTxt] = this.tinycolor(
+      this.mergedConfig.accent.Text.color
+    )
+      .setAlpha(this.defaults.txt.txt)
+      .toRgbString();
   }
 
   generateBorderss(essence) {
@@ -389,7 +400,6 @@ class Skinner {
       this.skin[_vb.nameBorder] = this.skin.bodyBg;
     }
   }
-
 
   getFallbackLvl(essence, variation, lvl) {
     let _essence = essence;
@@ -411,55 +421,6 @@ class Skinner {
       : this.skin[_vb.name + _variationsArr[_lvl]];
 
     return _bg;
-  }
-
-  initBasedOnCustomConfig(config) {
-    let _config = config;
-
-    if (!_config) {
-      console.error("no config provided");
-      return false;
-    }
-
-    this.mergedConfig = this.mergeConfig(_config);
-
-    this.generateTheme();
-
-    this.applyTheme();
-
-    this.cssCb(this.skin);
-  }
-
-  applyTheme() {
-    const self = this;
-    const config = this.configOrder;
-    self.message("loading config", true);
-
-    let i = -1;
-    let timeoutId;
-    (function apply() {
-      i++;
-      clearTimeout(timeoutId);
-      if (config.length === i) {
-        return self.message("", false);
-      }
-      let _essence = config[i].name;
-      if (!self.mergedConfig[_essence].editable) {
-        return (timeoutId = setTimeout(apply));
-      }
-      let verbalData = self.verbalData(_essence);
-
-      self[verbalData.nameBg].picker.setColor(self.skin[verbalData.nameBg]);
-      self[verbalData.nameBg].picker2.setColor(self.skin[verbalData.nameBg_g]);
-      self[verbalData.nameBg].picker3.setColor(self.skin[verbalData.nameTxt]);
-      self[verbalData.nameBg].borderPckr.setColor(
-        self.skin[verbalData.nameBorder]
-      );
-      self[verbalData.nameBg].customAccentPckr.setColor(
-        self.skin[verbalData.nameAccent]
-      );
-      timeoutId = setTimeout(apply);
-    })();
   }
 
   init() {
@@ -485,6 +446,7 @@ class Skinner {
     data.nameBg = data.name + "Bg";
     data.nameBg_g = data.nameBg + "_g";
     data.nameG = data.name + "G";
+    data.nameRGBATransparent = data.name + "RGBATransparent";
     data.nameRGBA = data.name + "RGBA";
     data.nameRGBA2 = data.name + "RGBA2";
     data.nameRGBA3 = data.name + "RGBA3";
@@ -531,7 +493,6 @@ class Skinner {
   generateColorLogick(essence) {
     let _config = this.mergedConfig;
 
-
     let _essence = essence;
     let _vd = this.verbalData(_essence);
 
@@ -550,7 +511,6 @@ class Skinner {
 
       this.skin[_vd.nameTxt] = _config[_essence].Text.color;
 
-      
       this.skin[_vd.nameRadius] = _config[_essence].borderRadius;
 
       this.generateBackgrounds(_essence);
@@ -565,7 +525,6 @@ class Skinner {
         ? "#262626"
         : "#fff";
     } else {
-
       let _fbEssence = _config[_essence].fallback.find((f) => {
         let vd = this.verbalData(f);
         return _config[f].editable && this.skin[vd.isName];
@@ -581,22 +540,17 @@ class Skinner {
         fbLength
       );
 
-      // console.log(_vdf.nameBg, this.skin[_vdf.isDark]);
-      
-
-      this.skin[_vd.isDark] = this.skin[_vdf.isDark];
-
       this.skin[_vd.isGradient] = this.skin[_vdf.isGradient];
       this.skin[_vd.nameBg_g] = this.skin[_vdf.nameBg_g];
       this.skin[_vd.gradientAngle] = this.skin[_vdf.gradientAngle];
       this.skin[_vd.isCustomTxt] = this.skin[_vdf.isCustomTxt];
       this.skin[_vd.nameTxt] = this.skin[_vdf.nameTxt];
       this.skin[_vd.nameTxt2] = this.tinycolor(this.skin[_vd.nameTxt])
-      .setAlpha(this.defaults.txt.txt2)
-      .toRgbString();
-    this.skin[_vd.nameTxt3] = this.tinycolor(this.skin[_vd.nameTxt])
-      .setAlpha(this.defaults.txt.txt3)
-      .toRgbString();
+        .setAlpha(this.defaults.txt.txt2)
+        .toRgbString();
+      this.skin[_vd.nameTxt3] = this.tinycolor(this.skin[_vd.nameTxt])
+        .setAlpha(this.defaults.txt.txt3)
+        .toRgbString();
       this.skin[_vd.isCustomAccent] = this.skin[_vdf.isCustomAccent];
       this.skin[_vd.nameAccent] = this.skin[_vdf.nameAccent];
       this.skin[_vd.isCustomBorder] = this.skin[_vdf.isCustomBorder];
@@ -607,7 +561,7 @@ class Skinner {
       ).isLight()
         ? "#262626"
         : "#fff";
-      this.generateBackgrounds(_essence);
+      this.generateBackgrounds(_essence, _fbEssence);
       this.generateGradientss(_essence);
       this.generateAccentss(_essence);
       this.generateBorderss(_essence);
@@ -626,4 +580,4 @@ class Skinner {
 
     return fbArr;
   }
-};
+}
