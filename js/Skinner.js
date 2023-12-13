@@ -157,12 +157,6 @@ class Skinner {
     this.isUIVisible = true;
     this.version = "1.0.0";
 
-    this._config = starterConfig || {};
-
-    this.activeEssences = this.configOrder.filter((c) => {
-      return this._config[c.name];
-    });
-
     this.defaults = {
       dark: {
         bg2: 8,
@@ -186,9 +180,6 @@ class Skinner {
       },
     };
 
-    this.mergedConfig = this.mergeConfig(this._config);
-
-    this.modifyKey = this.modifyKey.bind(this);
     this.mergeConfig = this.mergeConfig.bind(this);
     this.getFallbackLvl = this.getFallbackLvl.bind(this);
 
@@ -235,7 +226,7 @@ class Skinner {
           isActive: false,
           color: "#AC23F7",
         },
-        borderRadius: 4,
+        borderRadius: 6,
       };
       _mergedConfig[_essence] = {};
       _mergedConfig[_essence].editable = Boolean(
@@ -256,7 +247,11 @@ class Skinner {
           );
         }
       }
-      if (_essence === "body" || _essence === "accent" || _essence === "brand") {
+      if (
+        _essence === "body" ||
+        _essence === "accent" ||
+        _essence === "brand"
+      ) {
         _mergedConfig[_essence].Background.isActive = true;
       }
       _mergedConfig[_essence].fallback = this.configOrder[i].inherits;
@@ -428,21 +423,21 @@ class Skinner {
     return _bg;
   }
 
-  init() {
+  init(cfg) {
+    this._config = cfg || {};
+    this.activeEssences = this.configOrder.filter((c) => {
+      return this._config[c.name];
+    });
+    this.mergedConfig = this.mergeConfig(this._config);
     this.generateTheme();
     console.log(this.skin);
     return this.skin;
   }
 
   prerogative(name) {
-    return name === "body" || name === "accent" || name === "brand" ? true : false;
-  }
-
-  modifyKey(key, value) {
-    this.skin[key] = value;
-    this.generateTheme();
-    this.updateAllControls();
-    this.cssCb(this.skin);
+    return name === "body" || name === "accent" || name === "brand"
+      ? true
+      : false;
   }
 
   verbalData(name) {
@@ -461,6 +456,7 @@ class Skinner {
     data.nameBg2Hov = data.nameBg2 + "Hover";
     data.nameBg3 = data.nameBg + "3";
     data.nameBg3Hov = data.nameBg3 + "Hover";
+    console.log(data.upperCaseName);
     data.upperCaseName = data.name[0].toUpperCase() + data.name.substring(1);
     data.isName = "is" + data.upperCaseName + "Bg";
     data.isGradient = "is" + data.upperCaseName + "Gradient";

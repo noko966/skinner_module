@@ -16,8 +16,13 @@
       }
 
       html {
-        background-color: var(--skinnerBg);
+        /* background-color: var(--skinnerBg); */
         overflow-x: hidden;
+        background: linear-gradient(
+          to right,
+          #2d2940 #2e1f39 #3b1f30 #47292d #43252b #2e1f39 #2d2940
+        );
+        font-size: 16px;
       }
 
       .wrapper {
@@ -27,25 +32,30 @@
       }
 
       .wrapper > div {
-        /* width: 25%; */
-        width: 50%;
+        width: 25%;
+        /* width: 50%; */
+        /* width: 33.3333%; */
       }
 
       .skinner_essence_tint {
         display: flex;
         align-items: center;
-        padding: 20px 24px;
-        margin-top: -6px;
+        padding: 6px 12px;
+        margin-bottom: 6px;
         box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.02);
         transition: all 0.3s ease-in;
         cursor: pointer;
-      } 
+      }
+
+      .skinner_essence_tint:last-child {
+        margin-bottom: 0;
+      }
 
       .skinner_essence_tint:hover {
         transform: translateY(-10px) scale(1.1);
       }
       .skinner_essence_tint_accent {
-        margin-top: 12px;
+        /* margin-top: 12px; */
       }
 
       .skinner_essence_tint_texts_wrapper {
@@ -62,7 +72,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        font-size: 1em;
+        font-size: 1.2em;
+        font-weight: 500;
       }
 
       .skinner_essence_tint_hex {
@@ -73,7 +84,7 @@
         font-weight: 500;
       }
 
-      .skinner_essence_tint_hex_wrapper{
+      .skinner_essence_tint_hex_wrapper {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
@@ -83,25 +94,28 @@
       .skinner_essence_tints_wrapper {
         display: flex;
         flex-direction: column;
-        padding: 8px;
-        border-radius: 4px;
+        padding: 8px 8px;
       }
 
       .skinner_essence_heading {
-        color: var(--skinnerTxt);
+        /* color: var(--skinnerTxt); */
+        color: #ffffff;
         display: flex;
         align-items: center;
         font-size: 1.6em;
         margin-bottom: 8px;
         font-weight: 700;
         text-transform: capitalize;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .skinner_essence_tint_with_opacity {
         display: flex;
         align-items: center;
         flex-direction: column;
-        padding: 8px;
+        /* padding: 8px; */
         justify-content: space-between;
       }
 
@@ -114,7 +128,21 @@
         width: 100%;
         height: 44px;
         flex-shrink: 0;
-        margin-bottom: 4px;
+        /* margin-bottom: 4px; */
+      }
+
+      .skinner_essence_tints_wrapper_tints {
+        display: flex;
+        flex-direction: column;
+        padding: 2px 2px;
+        margin-bottom: 12px;
+      }
+      .skinner_essence_tints_wrapper_tints:last-child {
+        margin-bottom: 0;
+      }
+
+      .skinner_essence_tints_wrapper_tints-hidden {
+        /* background: transparent !important; */
       }
     </style>
   </head>
@@ -154,7 +182,7 @@
 
     function buildHtmlForPresentation(el, vd, skin) {
       let essenceWrapper = document.createElement("div");
-      essenceWrapper.style.padding = "16px";
+      essenceWrapper.style.padding = "12px";
 
       let essenceCont = document.createElement("div");
       let essenceHeading = document.createElement("span");
@@ -162,7 +190,7 @@
 
       essenceHeading.innerText = vd.name;
 
-      essenceCont.appendChild(essenceHeading);
+      // essenceCont.appendChild(essenceHeading);
       essenceWrapper.appendChild(essenceCont);
       el.appendChild(essenceWrapper);
 
@@ -177,7 +205,35 @@
 
       let essenceTintWrapper = document.createElement("div");
       essenceTintWrapper.className = "skinner_essence_tints_wrapper";
-      essenceTintWrapper.style.background = `var(--${vd["nameBg"]})`;
+      essenceTintWrapper.style.background = `radial-gradient(
+        closest-side, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA3"]}))`;
+      essenceTintWrapper.style.border = `1px solid var(--${vd["nameRGBA3"]})`;
+      // essenceTintWrapper.style.background = `linear-gradient(
+      //     to bottom, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA3"]}))`;
+      essenceTintWrapper.style.borderRadius = `var(--${vd["nameRadius"]})`;
+
+      let essenceTintWrapperTints = document.createElement("div");
+      essenceTintWrapperTints.className = "skinner_essence_tints_wrapper_tints";
+      // essenceTintWrapperTints.style.background = `linear-gradient(
+      //   to bottom, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA2"]}), var(--${vd["nameRGBA"]}))`;
+      essenceTintWrapperTints.style.borderRadius = `var(--${vd["nameRadius"]})`;
+
+      let essenceTintWrapperOverlays = document.createElement("div");
+      essenceTintWrapperOverlays.className =
+        "skinner_essence_tints_wrapper_tints skinner_essence_tints_wrapper_tints-hidden";
+      // essenceTintWrapperOverlays.style.background = `var(--${vd["nameRGBA3"]})`;
+      essenceTintWrapperOverlays.style.borderRadius = `var(--${vd["nameRadius"]})`;
+
+      let essenceTintWrapperAccents = document.createElement("div");
+      essenceTintWrapperAccents.className =
+        "skinner_essence_tints_wrapper_tints";
+      // essenceTintWrapperAccents.style.background = `var(--${vd["nameRGBA"]})`;
+      essenceTintWrapperAccents.style.borderRadius = `var(--${vd["nameRadius"]})`;
+
+      essenceTintWrapper.appendChild(essenceHeading);
+      essenceTintWrapper.appendChild(essenceTintWrapperTints);
+      essenceTintWrapper.appendChild(essenceTintWrapperOverlays);
+      essenceTintWrapper.appendChild(essenceTintWrapperAccents);
       essenceCont.appendChild(essenceTintWrapper);
 
       for (let i = 0; i < bgArr.length; i++) {
@@ -188,44 +244,32 @@
 
         nameHexWrapper.className = "skinner_essence_tint_hex_wrapper";
         itemName.className = "skinner_essence_tint_name";
+        itemName.innerText = `${vd[bgArr[i]["bg"]]}`;
 
-        itemName.innerText = `${vd[bgArr[i]['bg']]}` ;
- 
         let itemColor = document.createElement("div");
         itemColor.className = "skinner_essence_tint_hex";
-        itemColor.innerText = `${skin[vd[bgArr[i]['bg']]]}` ;
+        itemColor.innerText = `${skin[vd[bgArr[i]["bg"]]]}`;
+        itemColor.style.color = `var(--${vd["nameTxt2"]})`;
 
         item.style.borderRadius = `var(--${vd.nameRadius})`;
 
         item.style.background = `var(--${vd[bgArr[i]["bg"]]})`;
-        item.style.color = `var(--${vd[bgArr[i]["txt"]]})`;
+        item.style.color = `var(--${vd["nameTxt"]})`;
 
         let itemTextWrapper = document.createElement("div");
         itemTextWrapper.className = "skinner_essence_tint_texts_wrapper";
 
-        let itemText1 = document.createElement("div");
-        itemText1.innerText = "Text 1";
-        itemText1.style.color = `var(--${vd["nameTxt"]})`;
-        let itemText2 = document.createElement("div");
-        itemText2.innerText = "Text 2";
-        itemText2.style.color = `var(--${vd["nameTxt2"]})`;
-        let itemText3 = document.createElement("div");
-        itemText3.innerText = "Text 3";
-        itemText3.style.color = `var(--${vd["nameTxt3"]})`;
-
-        itemTextWrapper.appendChild(itemText1);
-        itemTextWrapper.appendChild(itemText2);
-        itemTextWrapper.appendChild(itemText3);
+        item.appendChild(nameHexWrapper);
         nameHexWrapper.appendChild(itemName);
         nameHexWrapper.appendChild(itemColor);
-        item.appendChild(nameHexWrapper);
-        item.appendChild(itemTextWrapper);
-        essenceTintWrapper.appendChild(item);
+        // item.appendChild(itemTextWrapper);
+        essenceTintWrapperTints.appendChild(item);
       }
 
       let rgbaWrapper = document.createElement("div");
       rgbaWrapper.className = "skinner_essence_tint_with_opacity";
-      rgbaWrapper.style.background = `linear-gradient(90deg, var(--${vd.nameBg2}), var(--${vd.nameBg3}), var(--${vd.nameBg2}))`;
+      // rgbaWrapper.style.background = `linear-gradient(90deg, var(--${vd.nameBg2}), var(--${vd.nameBg3}), var(--${vd.nameBg2}))`;
+      // rgbaWrapper.style.borderRadius = `var(--${vd["nameRadius"]})`;
       //   rgbaWrapper.style.background = `var(--${vd["nameBg"]})`;
       let RGBAArr = [
         // "nameRGBATransparent",
@@ -234,63 +278,93 @@
         "nameRGBA3",
       ];
       for (let j = 0; j < RGBAArr.length; j++) {
-        let rgbaEl = document.createElement("div");
-        rgbaEl.className = "skinner_essence_tint_with_opacity_element";
-        rgbaEl.innerText = `RGBA ${j + 1}`;
-        rgbaEl.style.background = `var(--${vd[RGBAArr[j]]})`;
-        rgbaEl.style.border = `1px solid var(--${vd.nameBorder})`;
+        let NAME = vd[RGBAArr[j]];
+        let TXT = vd[RGBAArr[j]];
+        let BG = `var(--${TXT})`;
+        let BRD = `var(--${vd.nameRadius})`;
+        let HEX = skin[NAME];
 
-        rgbaEl.style.color = `var(--${vd["nameTxt"]})`;
-        rgbaEl.style.borderRadius = `var(--${vd.nameRadius})`;
-        rgbaWrapper.appendChild(rgbaEl);
+        let item = document.createElement("div");
+        item.className = "skinner_essence_tint";
+        let itemName = document.createElement("div");
+        let nameHexWrapper = document.createElement("div");
+
+        nameHexWrapper.className = "skinner_essence_tint_hex_wrapper";
+        itemName.className = "skinner_essence_tint_name";
+        itemName.innerText = NAME;
+        itemName.style.color = `var(--${vd["nameTxt"]})`;
+
+        let itemColor = document.createElement("div");
+        itemColor.className = "skinner_essence_tint_hex";
+        itemColor.innerText = HEX;
+        itemColor.style.color = `var(--${vd["nameTxt2"]})`;
+
+        item.style.borderRadius = BRD;
+        item.style.background = BG;
+        item.style.color = TXT;
+
+        nameHexWrapper.appendChild(itemName);
+        nameHexWrapper.appendChild(itemColor);
+        item.appendChild(nameHexWrapper);
+        essenceTintWrapperOverlays.appendChild(item);
       }
 
-      essenceTintWrapper.appendChild(rgbaWrapper);
-
+      let NAME = vd.nameAccent;
+      let VARBG = `var(--${vd.nameAccent})`;
+      let VARTXT = `var(--${vd.nameAccentTXT})`;
+      let VARBRD = `var(--${vd.nameRadius})`;
+      let HEX = skin[vd.nameAccent];
       let item = document.createElement("div");
       item.className = "skinner_essence_tint skinner_essence_tint_accent";
+
       let itemName = document.createElement("div");
       itemName.className = "skinner_essence_tint_name";
+      itemName.style.color = VARTXT;
 
-      itemName.innerText = "Accent";
-      item.style.borderRadius = `var(--${vd.nameRadius})`;
+      let itemColor = document.createElement("div");
+      itemColor.className = "skinner_essence_tint_hex";
+      itemColor.style.color = VARTXT;
 
-      item.style.background = `var(--${vd.nameAccent})`;
-      item.style.color = `var(--${vd.nameAccentTxt})`;
+      itemColor.innerText = HEX;
+      itemName.innerText = NAME;
+      item.style.borderRadius = VARBRD;
+      item.style.background = VARBG;
+      item.style.color = VARTXT;
 
       let itemTextWrapper = document.createElement("div");
-      itemTextWrapper.className = "skinner_essence_tint_texts_wrapper";
+      itemTextWrapper.className = "skinner_essence_tint_hex_wrapper";
 
-      item.appendChild(itemName);
+      itemTextWrapper.appendChild(itemName);
+      itemTextWrapper.appendChild(itemColor);
       item.appendChild(itemTextWrapper);
-      essenceTintWrapper.appendChild(item);
+      essenceTintWrapperAccents.appendChild(item);
     }
 
     let builderConfig = {
       light: {
         body: {
           Background: {
-            color: "#fff",
-            isDark: !tinycolor("#fff").isDark(),
+            color: "#e5e5e5",
+            isDark: !tinycolor("#e5e5e5").isDark(),
           },
           Text: {
-            color: "#000000",
+            color: "#000",
           },
         },
         dominant: {
           Background: {
             isActive: true,
-            color: "#c3cddb",
-            isDark: !tinycolor("#c3cddb").isDark(),
+            color: "#999999",
+            isDark: !tinycolor("#999999").isDark(),
           },
           Text: {
-            color: "#000000",
+            color: "#000",
           },
         },
         accent: {
           Background: {
-            color: "#194686",
-            isDark: !tinycolor("#194686").isDark(),
+            color: "#bd5726",
+            isDark: !tinycolor("#bd5726").isDark(),
           },
           Text: {
             color: "#ffffff",
@@ -298,8 +372,8 @@
         },
         brand: {
           Background: {
-            color: "#a92c9e",
-            isDark: !tinycolor("#a92c9e").isDark(),
+            color: "#5ea2c9",
+            isDark: !tinycolor("#5ea2c9").isDark(),
           },
           Text: {
             color: "#ffffff",
@@ -309,8 +383,8 @@
       dark: {
         body: {
           Background: {
-            color: "#1a1a1a ",
-            isDark: !tinycolor("#1a1a1a").isDark(),
+            color: "#222222 ",
+            isDark: !tinycolor("#222222").isDark(),
           },
           Text: {
             color: "#ffffff",
@@ -318,111 +392,164 @@
         },
         accent: {
           Background: {
-            color: "#ffb700",
-            isDark: !tinycolor("#ffb700").isDark(),
+            color: "#4173a6",
+            isDark: !tinycolor("#4173a6").isDark(),
           },
           Text: {
-            color: "#000000",
+            color: "#fff",
           },
         },
         brand: {
           Background: {
-            color: "#a92c9e",
-            isDark: !tinycolor("#a92c9e").isDark(),
+            color: "#5b9dcd",
+            isDark: !tinycolor("#5b9dcd").isDark(),
           },
           Text: {
-            color: "#ffffff",
+            color: "#fff",
           },
         },
       },
       other: {
         body: {
           Background: {
-            color: "#1e3a5f ",
-            isDark: !tinycolor("#1e3a5f").isDark(),
+            color: "#2b2b45 ",
+            isDark: !tinycolor("#2b2b45").isDark(),
           },
           Text: {
-            color: "#d0e0f0",
+            color: "#fff",
+          },
+        },
+        dominant: {
+          Background: {
+            color: "#373a59 ",
+            isDark: !tinycolor("#373a59").isDark(),
+          },
+          Text: {
+            color: "#fff",
           },
         },
         accent: {
           Background: {
-            color: "#4fb3bf",
-            isDark: !tinycolor("#4fb3bf").isDark(),
+            color: "#9abaa2",
+            isDark: !tinycolor("#9abaa2").isDark(),
           },
           Text: {
-            color: "#ffffff",
+            color: "#000",
           },
         },
         brand: {
           Background: {
-            color: "#a92c9e",
-            isDark: !tinycolor("#a92c9e").isDark(),
+            color: "#c8ab43",
+            isDark: !tinycolor("#c8ab43").isDark(),
           },
           Text: {
-            color: "#ffffff",
+            color: "#000",
           },
         },
       },
     };
 
-    let s = new Skinner(() => {}, builderConfig.dark, tinycolor);
-    let skin = s.init();
-
-    let co = s.getConfigOrder();
-    let vd = s.getVerbalDataGenerator();
-
-    let el = document.querySelector(".wrapper");
-
-    let htmlEl = document.documentElement;
-    let htmlBg = getOppositeColor(skin["bodyBg"]);
-    htmlEl.style.setProperty(`--skinnerBg`, htmlBg.bg);
-    htmlEl.style.setProperty(`--skinnerTxt`, htmlBg.txt);
-
-    for (let i = 0; i < co.length; i++) {
-      let vdd = vd(co[i].name);
-      buildHtmlForPresentation(el, vdd, skin);
-
-      htmlEl.style.setProperty(`--${vdd["nameBg"]}`, skin[vdd["nameBg"]]);
-      htmlEl.style.setProperty(`--${vdd["nameBgHov"]}`, skin[vdd["nameBgHov"]]);
-      htmlEl.style.setProperty(`--${vdd["nameBg2"]}`, skin[vdd["nameBg2"]]);
-      htmlEl.style.setProperty(
-        `--${vdd["nameBg2Hov"]}`,
-        skin[vdd["nameBg2Hov"]]
-      );
-      htmlEl.style.setProperty(`--${vdd["nameBg3"]}`, skin[vdd["nameBg3"]]);
-      htmlEl.style.setProperty(
-        `--${vdd["nameBg3Hov"]}`,
-        skin[vdd["nameBg3Hov"]]
-      );
-      htmlEl.style.setProperty(
-        `--${vdd["nameRGBATransparent"]}`,
-        skin[vdd["nameRGBATransparent"]]
-      );
-      htmlEl.style.setProperty(`--${vdd["nameRGBA"]}`, skin[vdd["nameRGBA"]]);
-      htmlEl.style.setProperty(`--${vdd["nameRGBA2"]}`, skin[vdd["nameRGBA2"]]);
-      htmlEl.style.setProperty(`--${vdd["nameRGBA3"]}`, skin[vdd["nameRGBA3"]]);
-      htmlEl.style.setProperty(
-        `--${vdd["nameAccent"]}`,
-        skin[vdd["nameAccent"]]
-      );
-      htmlEl.style.setProperty(
-        `--${vdd["nameAccentTxt"]}`,
-        skin[vdd["nameAccentTxt"]]
-      );
-      htmlEl.style.setProperty(`--${vdd["nameTxt"]}`, skin[vdd["nameTxt"]]);
-      htmlEl.style.setProperty(`--${vdd["nameTxt2"]}`, skin[vdd["nameTxt2"]]);
-      htmlEl.style.setProperty(`--${vdd["nameTxt3"]}`, skin[vdd["nameTxt3"]]);
-      htmlEl.style.setProperty(
-        `--${vdd["nameBorder"]}`,
-        skin[vdd["nameBorder"]]
-      );
-      htmlEl.style.setProperty(
-        `--${vdd["nameRadius"]}`,
-        skin[vdd["nameRadius"]] + "px"
-      );
+    let c = 0;
+    let themes = [];
+    for (const theme in builderConfig) {
+      themes.push(builderConfig[theme]);
     }
 
-    console.log(co);
+    let s = new Skinner(() => {}, 0, tinycolor);
+    let skin = s.init(themes[0]);
+    addHTMLVars(s, skin);
+    document.addEventListener("click", () => {
+      removeHTMLVars();
+      if (c > themes.length - 1) {
+        c = 0;
+      }
+      skin = s.init(themes[c]);
+      addHTMLVars(s, skin);
+      c += 1;
+    });
+
+    function removeHTMLVars() {
+      let htmlEl = document.documentElement;
+      htmlEl.style = null;
+    }
+
+    function addHTMLVars(_skinner, _skin) {
+      let co = _skinner.getConfigOrder();
+      let vd = _skinner.getVerbalDataGenerator();
+
+      let el = document.querySelector(".wrapper");
+
+      let htmlEl = document.documentElement;
+      // let htmlBg = getOppositeColor(_skin["bodyBg"]);
+      // htmlEl.style.setProperty(`--skinnerBg`, htmlBg.bg);
+      // htmlEl.style.setProperty(`--skinnerTxt`, htmlBg.txt);
+      htmlEl.style.setProperty("overflowX", "hidder");
+      htmlEl.style.setProperty(
+        "background",
+        `linear-gradient(to right,#2d2940, #2e1f39, #3b1f30, #47292d, #43252b, #2e1f39, #2d2940)`
+      );
+      htmlEl.style.setProperty("fontSize", "16px");
+      for (let i = 0; i < co.length; i++) {
+        let vdd = vd(co[i].name);
+        buildHtmlForPresentation(el, vdd, _skin);
+
+        htmlEl.style.setProperty(`--${vdd["nameBg"]}`, _skin[vdd["nameBg"]]);
+        htmlEl.style.setProperty(
+          `--${vdd["nameBgHov"]}`,
+          _skin[vdd["nameBgHov"]]
+        );
+        htmlEl.style.setProperty(`--${vdd["nameBg2"]}`, _skin[vdd["nameBg2"]]);
+        htmlEl.style.setProperty(
+          `--${vdd["nameBg2Hov"]}`,
+          _skin[vdd["nameBg2Hov"]]
+        );
+        htmlEl.style.setProperty(`--${vdd["nameBg3"]}`, _skin[vdd["nameBg3"]]);
+        htmlEl.style.setProperty(
+          `--${vdd["nameBg3Hov"]}`,
+          _skin[vdd["nameBg3Hov"]]
+        );
+        htmlEl.style.setProperty(
+          `--${vdd["nameRGBATransparent"]}`,
+          _skin[vdd["nameRGBATransparent"]]
+        );
+        htmlEl.style.setProperty(
+          `--${vdd["nameRGBA"]}`,
+          _skin[vdd["nameRGBA"]]
+        );
+        htmlEl.style.setProperty(
+          `--${vdd["nameRGBA2"]}`,
+          _skin[vdd["nameRGBA2"]]
+        );
+        htmlEl.style.setProperty(
+          `--${vdd["nameRGBA3"]}`,
+          _skin[vdd["nameRGBA3"]]
+        );
+        htmlEl.style.setProperty(
+          `--${vdd["nameAccent"]}`,
+          _skin[vdd["nameAccent"]]
+        );
+        htmlEl.style.setProperty(
+          `--${vdd["nameAccentTxt"]}`,
+          _skin[vdd["nameAccentTxt"]]
+        );
+        htmlEl.style.setProperty(`--${vdd["nameTxt"]}`, _skin[vdd["nameTxt"]]);
+        htmlEl.style.setProperty(
+          `--${vdd["nameTxt2"]}`,
+          _skin[vdd["nameTxt2"]]
+        );
+        htmlEl.style.setProperty(
+          `--${vdd["nameTxt3"]}`,
+          _skin[vdd["nameTxt3"]]
+        );
+        htmlEl.style.setProperty(
+          `--${vdd["nameBorder"]}`,
+          _skin[vdd["nameBorder"]]
+        );
+        htmlEl.style.setProperty(
+          `--${vdd["nameRadius"]}`,
+          _skin[vdd["nameRadius"]] + "px"
+        );
+      }
+    }
   </script>
 </html>
