@@ -12,6 +12,10 @@ class Skinner {
         inherits: null,
       },
       {
+        name: "brand",
+        inherits: null,
+      },
+      {
         name: "dominant",
         inherits: ["body"],
       },
@@ -252,7 +256,7 @@ class Skinner {
           );
         }
       }
-      if (_essence === "body" || _essence === "accent") {
+      if (_essence === "body" || _essence === "accent" || _essence === "brand") {
         _mergedConfig[_essence].Background.isActive = true;
       }
       _mergedConfig[_essence].fallback = this.configOrder[i].inherits;
@@ -431,7 +435,7 @@ class Skinner {
   }
 
   prerogative(name) {
-    return name === "body" || name === "accent" ? true : false;
+    return name === "body" || name === "accent" || name === "brand" ? true : false;
   }
 
   modifyKey(key, value) {
@@ -497,7 +501,7 @@ class Skinner {
     let _essence = essence;
     let _vd = this.verbalData(_essence);
 
-    if (_essence === "body" || _essence === "accent") {
+    if (_essence === "body" || _essence === "accent" || _essence === "brand") {
       this.skin[_vd.isName] = true;
     }
 

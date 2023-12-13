@@ -17,6 +17,7 @@
 
       html {
         background-color: var(--skinnerBg);
+        overflow-x: hidden;
       }
 
       .wrapper {
@@ -36,8 +37,13 @@
         padding: 20px 24px;
         margin-top: -6px;
         box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.02);
-      }
+        transition: all 0.3s ease-in;
+        cursor: pointer;
+      } 
 
+      .skinner_essence_tint:hover {
+        transform: translateY(-10px) scale(1.1);
+      }
       .skinner_essence_tint_accent {
         margin-top: 12px;
       }
@@ -52,13 +58,26 @@
       }
 
       .skinner_essence_tint_name {
-        flex-grow: 1;
         min-width: 1px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 1em;
+      }
+
+      .skinner_essence_tint_hex {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         font-size: 1.2em;
         font-weight: 500;
+      }
+
+      .skinner_essence_tint_hex_wrapper{
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        min-width: 1px;
       }
 
       .skinner_essence_tints_wrapper {
@@ -165,9 +184,17 @@
         let item = document.createElement("div");
         item.className = "skinner_essence_tint";
         let itemName = document.createElement("div");
+        let nameHexWrapper = document.createElement("div");
+
+        nameHexWrapper.className = "skinner_essence_tint_hex_wrapper";
         itemName.className = "skinner_essence_tint_name";
 
-        itemName.innerText = bgArr[i]["sn"];
+        itemName.innerText = `${vd[bgArr[i]['bg']]}` ;
+ 
+        let itemColor = document.createElement("div");
+        itemColor.className = "skinner_essence_tint_hex";
+        itemColor.innerText = `${skin[vd[bgArr[i]['bg']]]}` ;
+
         item.style.borderRadius = `var(--${vd.nameRadius})`;
 
         item.style.background = `var(--${vd[bgArr[i]["bg"]]})`;
@@ -189,7 +216,9 @@
         itemTextWrapper.appendChild(itemText1);
         itemTextWrapper.appendChild(itemText2);
         itemTextWrapper.appendChild(itemText3);
-        item.appendChild(itemName);
+        nameHexWrapper.appendChild(itemName);
+        nameHexWrapper.appendChild(itemColor);
+        item.appendChild(nameHexWrapper);
         item.appendChild(itemTextWrapper);
         essenceTintWrapper.appendChild(item);
       }
@@ -267,6 +296,15 @@
             color: "#ffffff",
           },
         },
+        brand: {
+          Background: {
+            color: "#a92c9e",
+            isDark: !tinycolor("#a92c9e").isDark(),
+          },
+          Text: {
+            color: "#ffffff",
+          },
+        },
       },
       dark: {
         body: {
@@ -285,6 +323,15 @@
           },
           Text: {
             color: "#000000",
+          },
+        },
+        brand: {
+          Background: {
+            color: "#a92c9e",
+            isDark: !tinycolor("#a92c9e").isDark(),
+          },
+          Text: {
+            color: "#ffffff",
           },
         },
       },
@@ -307,10 +354,19 @@
             color: "#ffffff",
           },
         },
+        brand: {
+          Background: {
+            color: "#a92c9e",
+            isDark: !tinycolor("#a92c9e").isDark(),
+          },
+          Text: {
+            color: "#ffffff",
+          },
+        },
       },
     };
 
-    let s = new Skinner(() => {}, builderConfig.light, tinycolor);
+    let s = new Skinner(() => {}, builderConfig.dark, tinycolor);
     let skin = s.init();
 
     let co = s.getConfigOrder();
