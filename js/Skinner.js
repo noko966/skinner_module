@@ -1,5 +1,5 @@
 class Skinner {
-  constructor(cssCb, starterConfig, tinycolor) {
+  constructor(cssCb, tinycolor) {
     this.tinycolor = tinycolor;
 
     this.configOrder = [
@@ -261,7 +261,6 @@ class Skinner {
           : this.configOrder[i].variation;
     }
 
-    console.log(_mergedConfig);
     return _mergedConfig;
   }
 
@@ -380,8 +379,9 @@ class Skinner {
       this.skin[_vb.nameAccent] = _customAccentColor;
     } else {
       this.skin[_vb.nameAccent] =
-        this.skin.accentBg || this.mergedConfig.accent.Background.color;
+        this.mergedConfig.accent.Background.color;
     }
+    console.log(this.mergedConfig.accent.Background.color);
     this.skin[_vb.nameAccentTxt] = this.tinycolor(
       this.mergedConfig.accent.Text.color
     )
@@ -429,8 +429,8 @@ class Skinner {
       return this._config[c.name];
     });
     this.mergedConfig = this.mergeConfig(this._config);
+    console.log(this.mergedConfig.accent);
     this.generateTheme();
-    console.log(this.skin);
     return this.skin;
   }
 
@@ -456,7 +456,6 @@ class Skinner {
     data.nameBg2Hov = data.nameBg2 + "Hover";
     data.nameBg3 = data.nameBg + "3";
     data.nameBg3Hov = data.nameBg3 + "Hover";
-    console.log(data.upperCaseName);
     data.upperCaseName = data.name[0].toUpperCase() + data.name.substring(1);
     data.isName = "is" + data.upperCaseName + "Bg";
     data.isGradient = "is" + data.upperCaseName + "Gradient";

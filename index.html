@@ -1,555 +1,535 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;700&family=Inter:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
+        href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;700&family=Inter:wght@400;500;700&display=swap"
+        rel="stylesheet" />
     <title>Skinner</title>
     <style>
-      * {
-        box-sizing: border-box;
-      }
+        * {
+            box-sizing: border-box;
+        }
 
-      html {
-        /* background-color: var(--skinnerBg); */
-        overflow-x: hidden;
-        background: linear-gradient(
-          to right,
-          #2d2940 #2e1f39 #3b1f30 #47292d #43252b #2e1f39 #2d2940
-        );
-        font-size: 16px;
-      }
+        html {
+            /* background-color: var(--skinnerBg); */
+            overflow-x: hidden;
+            background: linear-gradient(to right,
+                    #2d2940, #2e1f39, #3b1f30, #47292d, #43252b, #2e1f39, #2d2940);
+            font-size: 16px;
+        }
 
-      .wrapper {
-        display: flex;
-        flex-wrap: wrap;
-        font-family: "Afacad", sans-serif;
-      }
+        .skinner_essence_root {
+            display: flex;
+            flex-wrap: wrap;
+            font-family: "Afacad", sans-serif;
+        }
 
-      .wrapper > div {
-        width: 25%;
-        /* width: 50%; */
-        /* width: 33.3333%; */
-      }
+        .skinner_essence_root_heading {
+            color: #ffffff;
+            display: flex;
+            align-items: centerR;
+            font-size: 1.6em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-transform: capitalize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Afacad", sans-serif;
+        }
 
-      .skinner_essence_tint {
-        display: flex;
-        align-items: center;
-        padding: 6px 12px;
-        margin-bottom: 6px;
-        box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.02);
-        transition: all 0.3s ease-in;
-        cursor: pointer;
-      }
+        .skinner_essence_wrapper {
+            width: 20%;
+            padding: 10px;
+        }
 
-      .skinner_essence_tint:last-child {
-        margin-bottom: 0;
-      }
+        .skinner_essence_tint {
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            margin-bottom: 6px;
+            box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s ease-in;
+            cursor: pointer;
+        }
 
-      .skinner_essence_tint:hover {
-        transform: translateY(-10px) scale(1.1);
-      }
-      .skinner_essence_tint_accent {
-        /* margin-top: 12px; */
-      }
+        .skinner_essence_tint:last-child {
+            margin-bottom: 0;
+        }
 
-      .skinner_essence_tint_texts_wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 8px;
-        font-size: 1.2em;
-        font-weight: 500;
-      }
+        .skinner_essence_tint:hover {
+            transform: translateY(-10px) scale(1.1);
+        }
 
-      .skinner_essence_tint_name {
-        min-width: 1px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 1.2em;
-        font-weight: 500;
-      }
+        .skinner_essence_tint_accent {
+            /* margin-top: 12px; */
+        }
 
-      .skinner_essence_tint_hex {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 1.2em;
-        font-weight: 500;
-      }
+        .skinner_essence_tint_texts_wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
 
-      .skinner_essence_tint_hex_wrapper {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        min-width: 1px;
-      }
+        .skinner_essence_tint_name {
+            min-width: 1px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
 
-      .skinner_essence_tints_wrapper {
-        display: flex;
-        flex-direction: column;
-        padding: 8px 8px;
-      }
+        .skinner_essence_tint_hex {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
 
-      .skinner_essence_heading {
-        /* color: var(--skinnerTxt); */
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        font-size: 1.6em;
-        margin-bottom: 8px;
-        font-weight: 700;
-        text-transform: capitalize;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+        .skinner_essence_tint_hex_wrapper {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            min-width: 1px;
+        }
 
-      .skinner_essence_tint_with_opacity {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        /* padding: 8px; */
-        justify-content: space-between;
-      }
+        .skinner_essence_tints_wrapper {
+            display: flex;
+            flex-direction: column;
+            padding: 8px 8px;
+        }
 
-      .skinner_essence_tint_with_opacity_element {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 500;
-        font-size: 1.2em;
-        width: 100%;
-        height: 44px;
-        flex-shrink: 0;
-        /* margin-bottom: 4px; */
-      }
+        .skinner_essence_heading {
+            /* color: var(--skinnerTxt); */
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            font-size: 1.6em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-transform: capitalize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-      .skinner_essence_tints_wrapper_tints {
-        display: flex;
-        flex-direction: column;
-        padding: 2px 2px;
-        margin-bottom: 12px;
-      }
-      .skinner_essence_tints_wrapper_tints:last-child {
-        margin-bottom: 0;
-      }
+        .skinner_essence_tint_with_opacity {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            /* padding: 8px; */
+            justify-content: space-between;
+        }
 
-      .skinner_essence_tints_wrapper_tints-hidden {
-        /* background: transparent !important; */
-      }
+        .skinner_essence_tint_with_opacity_element {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 1.2em;
+            width: 100%;
+            height: 44px;
+            flex-shrink: 0;
+            /* margin-bottom: 4px; */
+        }
+
+        .skinner_essence_tints_wrapper_tints {
+            display: flex;
+            flex-direction: column;
+            padding: 2px 2px;
+            margin-bottom: 12px;
+        }
+
+        .skinner_essence_tints_wrapper_tints:last-child {
+            margin-bottom: 0;
+        }
+
+        .skinner_essence_tints_wrapper_tints-hidden {
+            /* background: transparent !important; */
+        }
     </style>
-  </head>
+</head>
 
-  <body>
+<body>
     <div class="wrapper"></div>
-  </body>
-  <script src="js/TinyColor.js"></script>
-  <script src="js/Skinner.js"></script>
+</body>
+<script src="js/TinyColor.js"></script>
+<script src="js/Skinner.js"></script>
 
-  <script>
-    function getOppositeColor(hexColor) {
-      var color = tinycolor(hexColor);
+<script>
 
-      let res = {
-        bg: null,
-        txt: null,
-      };
-
-      // Check if the color is dark
-      if (color.isDark()) {
-        // For dark colors, lighten the color
-        res.bg = color.lighten(80).toHexString();
-        res.txt = "#000";
-      } else if (color.isLight()) {
-        res.bg = color.darken(80).toHexString();
-        res.txt = "#fff";
-        // For light colors, darken the color
-      } else {
-        // For other colors, get the complementary color
-        res.bg = color.complement().toHexString();
-        res.txt = tinycolor.mostReadable(res.bg, ["#000", "#fff"]);
-      }
-
-      return res;
-    }
-
-    function buildHtmlForPresentation(el, vd, skin) {
-      let essenceWrapper = document.createElement("div");
-      essenceWrapper.style.padding = "12px";
-
-      let essenceCont = document.createElement("div");
-      let essenceHeading = document.createElement("span");
-      essenceHeading.className = "skinner_essence_heading";
-
-      essenceHeading.innerText = vd.name;
-
-      // essenceCont.appendChild(essenceHeading);
-      essenceWrapper.appendChild(essenceCont);
-      el.appendChild(essenceWrapper);
-
-      const bgArr = [
-        { bg: "nameBg", txt: "nameTxt", sn: "Bg" },
-        { bg: "nameBgHov", txt: "nameTxt", sn: "Bg h" },
-        { bg: "nameBg2", txt: "nameTxt", sn: "Bg 2" },
-        { bg: "nameBg2Hov", txt: "nameTxt", sn: "Bg 2 h" },
-        { bg: "nameBg3", txt: "nameTxt", sn: "Bg 3" },
-        { bg: "nameBg3Hov", txt: "nameTxt", sn: "Bg 3 h" },
-      ];
-
-      let essenceTintWrapper = document.createElement("div");
-      essenceTintWrapper.className = "skinner_essence_tints_wrapper";
-      essenceTintWrapper.style.background = `radial-gradient(
-        closest-side, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA3"]}))`;
-      essenceTintWrapper.style.border = `1px solid var(--${vd["nameRGBA3"]})`;
-      // essenceTintWrapper.style.background = `linear-gradient(
-      //     to bottom, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA3"]}))`;
-      essenceTintWrapper.style.borderRadius = `var(--${vd["nameRadius"]})`;
-
-      let essenceTintWrapperTints = document.createElement("div");
-      essenceTintWrapperTints.className = "skinner_essence_tints_wrapper_tints";
-      // essenceTintWrapperTints.style.background = `linear-gradient(
-      //   to bottom, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA2"]}), var(--${vd["nameRGBA"]}))`;
-      essenceTintWrapperTints.style.borderRadius = `var(--${vd["nameRadius"]})`;
-
-      let essenceTintWrapperOverlays = document.createElement("div");
-      essenceTintWrapperOverlays.className =
-        "skinner_essence_tints_wrapper_tints skinner_essence_tints_wrapper_tints-hidden";
-      // essenceTintWrapperOverlays.style.background = `var(--${vd["nameRGBA3"]})`;
-      essenceTintWrapperOverlays.style.borderRadius = `var(--${vd["nameRadius"]})`;
-
-      let essenceTintWrapperAccents = document.createElement("div");
-      essenceTintWrapperAccents.className =
-        "skinner_essence_tints_wrapper_tints";
-      // essenceTintWrapperAccents.style.background = `var(--${vd["nameRGBA"]})`;
-      essenceTintWrapperAccents.style.borderRadius = `var(--${vd["nameRadius"]})`;
-
-      essenceTintWrapper.appendChild(essenceHeading);
-      essenceTintWrapper.appendChild(essenceTintWrapperTints);
-      essenceTintWrapper.appendChild(essenceTintWrapperOverlays);
-      essenceTintWrapper.appendChild(essenceTintWrapperAccents);
-      essenceCont.appendChild(essenceTintWrapper);
-
-      for (let i = 0; i < bgArr.length; i++) {
-        let item = document.createElement("div");
-        item.className = "skinner_essence_tint";
-        let itemName = document.createElement("div");
-        let nameHexWrapper = document.createElement("div");
-
-        nameHexWrapper.className = "skinner_essence_tint_hex_wrapper";
-        itemName.className = "skinner_essence_tint_name";
-        itemName.innerText = `${vd[bgArr[i]["bg"]]}`;
-
-        let itemColor = document.createElement("div");
-        itemColor.className = "skinner_essence_tint_hex";
-        itemColor.innerText = `${skin[vd[bgArr[i]["bg"]]]}`;
-        itemColor.style.color = `var(--${vd["nameTxt2"]})`;
-
-        item.style.borderRadius = `var(--${vd.nameRadius})`;
-
-        item.style.background = `var(--${vd[bgArr[i]["bg"]]})`;
-        item.style.color = `var(--${vd["nameTxt"]})`;
-
-        let itemTextWrapper = document.createElement("div");
-        itemTextWrapper.className = "skinner_essence_tint_texts_wrapper";
-
-        item.appendChild(nameHexWrapper);
-        nameHexWrapper.appendChild(itemName);
-        nameHexWrapper.appendChild(itemColor);
-        // item.appendChild(itemTextWrapper);
-        essenceTintWrapperTints.appendChild(item);
-      }
-
-      let rgbaWrapper = document.createElement("div");
-      rgbaWrapper.className = "skinner_essence_tint_with_opacity";
-      // rgbaWrapper.style.background = `linear-gradient(90deg, var(--${vd.nameBg2}), var(--${vd.nameBg3}), var(--${vd.nameBg2}))`;
-      // rgbaWrapper.style.borderRadius = `var(--${vd["nameRadius"]})`;
-      //   rgbaWrapper.style.background = `var(--${vd["nameBg"]})`;
-      let RGBAArr = [
-        // "nameRGBATransparent",
-        "nameRGBA",
-        "nameRGBA2",
-        "nameRGBA3",
-      ];
-      for (let j = 0; j < RGBAArr.length; j++) {
-        let NAME = vd[RGBAArr[j]];
-        let TXT = vd[RGBAArr[j]];
-        let BG = `var(--${TXT})`;
-        let BRD = `var(--${vd.nameRadius})`;
-        let HEX = skin[NAME];
-
-        let item = document.createElement("div");
-        item.className = "skinner_essence_tint";
-        let itemName = document.createElement("div");
-        let nameHexWrapper = document.createElement("div");
-
-        nameHexWrapper.className = "skinner_essence_tint_hex_wrapper";
-        itemName.className = "skinner_essence_tint_name";
-        itemName.innerText = NAME;
-        itemName.style.color = `var(--${vd["nameTxt"]})`;
-
-        let itemColor = document.createElement("div");
-        itemColor.className = "skinner_essence_tint_hex";
-        itemColor.innerText = HEX;
-        itemColor.style.color = `var(--${vd["nameTxt2"]})`;
-
-        item.style.borderRadius = BRD;
-        item.style.background = BG;
-        item.style.color = TXT;
-
-        nameHexWrapper.appendChild(itemName);
-        nameHexWrapper.appendChild(itemColor);
-        item.appendChild(nameHexWrapper);
-        essenceTintWrapperOverlays.appendChild(item);
-      }
-
-      let NAME = vd.nameAccent;
-      let VARBG = `var(--${vd.nameAccent})`;
-      let VARTXT = `var(--${vd.nameAccentTXT})`;
-      let VARBRD = `var(--${vd.nameRadius})`;
-      let HEX = skin[vd.nameAccent];
-      let item = document.createElement("div");
-      item.className = "skinner_essence_tint skinner_essence_tint_accent";
-
-      let itemName = document.createElement("div");
-      itemName.className = "skinner_essence_tint_name";
-      itemName.style.color = VARTXT;
-
-      let itemColor = document.createElement("div");
-      itemColor.className = "skinner_essence_tint_hex";
-      itemColor.style.color = VARTXT;
-
-      itemColor.innerText = HEX;
-      itemName.innerText = NAME;
-      item.style.borderRadius = VARBRD;
-      item.style.background = VARBG;
-      item.style.color = VARTXT;
-
-      let itemTextWrapper = document.createElement("div");
-      itemTextWrapper.className = "skinner_essence_tint_hex_wrapper";
-
-      itemTextWrapper.appendChild(itemName);
-      itemTextWrapper.appendChild(itemColor);
-      item.appendChild(itemTextWrapper);
-      essenceTintWrapperAccents.appendChild(item);
-    }
 
     let builderConfig = {
-      light: {
-        body: {
-          Background: {
-            color: "#e5e5e5",
-            isDark: !tinycolor("#e5e5e5").isDark(),
-          },
-          Text: {
-            color: "#000",
-          },
+        light: {
+            body: {
+                Background: {
+                    color: "#e5e5e5",
+                    isDark: !tinycolor("#e5e5e5").isDark(),
+                },
+                Text: {
+                    color: "#000",
+                },
+            },
+            dominant: {
+                Background: {
+                    isActive: true,
+                    color: "#999999",
+                    isDark: !tinycolor("#999999").isDark(),
+                },
+                Text: {
+                    color: "#000",
+                },
+            },
+            accent: {
+                Background: {
+                    color: "#bd5726",
+                    isDark: !tinycolor("#bd5726").isDark(),
+                },
+                Text: {
+                    color: "#ffffff",
+                },
+            },
+            brand: {
+                Background: {
+                    color: "#5ea2c9",
+                    isDark: !tinycolor("#5ea2c9").isDark(),
+                },
+                Text: {
+                    color: "#ffffff",
+                },
+            },
         },
-        dominant: {
-          Background: {
-            isActive: true,
-            color: "#999999",
-            isDark: !tinycolor("#999999").isDark(),
-          },
-          Text: {
-            color: "#000",
-          },
+        dark: {
+            body: {
+                Background: {
+                    color: "#222222 ",
+                    isDark: !tinycolor("#222222").isDark(),
+                },
+                Text: {
+                    color: "#ffffff",
+                },
+            },
+            accent: {
+                Background: {
+                    color: "#4173a6",
+                    isDark: !tinycolor("#4173a6").isDark(),
+                },
+                Text: {
+                    color: "#fff",
+                },
+            },
+            brand: {
+                Background: {
+                    color: "#5b9dcd",
+                    isDark: !tinycolor("#5b9dcd").isDark(),
+                },
+                Text: {
+                    color: "#fff",
+                },
+            },
         },
-        accent: {
-          Background: {
-            color: "#bd5726",
-            isDark: !tinycolor("#bd5726").isDark(),
-          },
-          Text: {
-            color: "#ffffff",
-          },
+        other: {
+            body: {
+                Background: {
+                    color: "#2b2b45 ",
+                    isDark: !tinycolor("#2b2b45").isDark(),
+                },
+                Text: {
+                    color: "#fff",
+                },
+            },
+            dominant: {
+                Background: {
+                    color: "#373a59 ",
+                    isDark: !tinycolor("#373a59").isDark(),
+                },
+                Text: {
+                    color: "#fff",
+                },
+            },
+            accent: {
+                Background: {
+                    color: "#9abaa2",
+                    isDark: !tinycolor("#9abaa2").isDark(),
+                },
+                Text: {
+                    color: "#000",
+                },
+            },
+            brand: {
+                Background: {
+                    color: "#c8ab43",
+                    isDark: !tinycolor("#c8ab43").isDark(),
+                },
+                Text: {
+                    color: "#000",
+                },
+            },
         },
-        brand: {
-          Background: {
-            color: "#5ea2c9",
-            isDark: !tinycolor("#5ea2c9").isDark(),
-          },
-          Text: {
-            color: "#ffffff",
-          },
-        },
-      },
-      dark: {
-        body: {
-          Background: {
-            color: "#222222 ",
-            isDark: !tinycolor("#222222").isDark(),
-          },
-          Text: {
-            color: "#ffffff",
-          },
-        },
-        accent: {
-          Background: {
-            color: "#4173a6",
-            isDark: !tinycolor("#4173a6").isDark(),
-          },
-          Text: {
-            color: "#fff",
-          },
-        },
-        brand: {
-          Background: {
-            color: "#5b9dcd",
-            isDark: !tinycolor("#5b9dcd").isDark(),
-          },
-          Text: {
-            color: "#fff",
-          },
-        },
-      },
-      other: {
-        body: {
-          Background: {
-            color: "#2b2b45 ",
-            isDark: !tinycolor("#2b2b45").isDark(),
-          },
-          Text: {
-            color: "#fff",
-          },
-        },
-        dominant: {
-          Background: {
-            color: "#373a59 ",
-            isDark: !tinycolor("#373a59").isDark(),
-          },
-          Text: {
-            color: "#fff",
-          },
-        },
-        accent: {
-          Background: {
-            color: "#9abaa2",
-            isDark: !tinycolor("#9abaa2").isDark(),
-          },
-          Text: {
-            color: "#000",
-          },
-        },
-        brand: {
-          Background: {
-            color: "#c8ab43",
-            isDark: !tinycolor("#c8ab43").isDark(),
-          },
-          Text: {
-            color: "#000",
-          },
-        },
-      },
     };
+
+    function buildHtmlForEssence(el, vd, skin) {
+        let essenceWrapper = document.createElement("div");
+        essenceWrapper.className = "skinner_essence_wrapper";
+
+        let essenceHeading = document.createElement("span");
+        essenceHeading.className = "skinner_essence_heading";
+
+        essenceHeading.innerText = vd.name;
+
+        el.appendChild(essenceWrapper);
+
+        const bgArr = [
+            { bg: "nameBg", txt: "nameTxt", sn: "Bg" },
+            { bg: "nameBgHov", txt: "nameTxt", sn: "Bg h" },
+            { bg: "nameBg2", txt: "nameTxt", sn: "Bg 2" },
+            { bg: "nameBg2Hov", txt: "nameTxt", sn: "Bg 2 h" },
+            { bg: "nameBg3", txt: "nameTxt", sn: "Bg 3" },
+            { bg: "nameBg3Hov", txt: "nameTxt", sn: "Bg 3 h" },
+        ];
+
+        let essenceTintWrapper = document.createElement("div");
+        essenceTintWrapper.className = "skinner_essence_tints_wrapper";
+        essenceTintWrapper.style.background = `radial-gradient(
+        closest-side, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA3"]}))`;
+        essenceTintWrapper.style.border = `1px solid var(--${vd["nameRGBA3"]})`;
+        // essenceTintWrapper.style.background = `linear-gradient(
+        //     to bottom, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA3"]}))`;
+        essenceTintWrapper.style.borderRadius = `var(--${vd["nameRadius"]})`;
+
+        let essenceTintWrapperTints = document.createElement("div");
+        essenceTintWrapperTints.className = "skinner_essence_tints_wrapper_tints";
+        // essenceTintWrapperTints.style.background = `linear-gradient(
+        //   to bottom, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA2"]}), var(--${vd["nameRGBA"]}))`;
+        essenceTintWrapperTints.style.borderRadius = `var(--${vd["nameRadius"]})`;
+
+        let essenceTintWrapperOverlays = document.createElement("div");
+        essenceTintWrapperOverlays.className =
+            "skinner_essence_tints_wrapper_tints skinner_essence_tints_wrapper_tints-hidden";
+        // essenceTintWrapperOverlays.style.background = `var(--${vd["nameRGBA3"]})`;
+        essenceTintWrapperOverlays.style.borderRadius = `var(--${vd["nameRadius"]})`;
+
+        let essenceTintWrapperAccents = document.createElement("div");
+        essenceTintWrapperAccents.className =
+            "skinner_essence_tints_wrapper_tints";
+        // essenceTintWrapperAccents.style.background = `var(--${vd["nameRGBA"]})`;
+        essenceTintWrapperAccents.style.borderRadius = `var(--${vd["nameRadius"]})`;
+
+        essenceTintWrapper.appendChild(essenceHeading);
+        essenceTintWrapper.appendChild(essenceTintWrapperTints);
+        essenceTintWrapper.appendChild(essenceTintWrapperOverlays);
+        essenceTintWrapper.appendChild(essenceTintWrapperAccents);
+        essenceWrapper.appendChild(essenceTintWrapper);
+
+        for (let i = 0; i < bgArr.length; i++) {
+            let item = document.createElement("div");
+            item.className = "skinner_essence_tint";
+            let itemName = document.createElement("div");
+            let nameHexWrapper = document.createElement("div");
+
+            nameHexWrapper.className = "skinner_essence_tint_hex_wrapper";
+            itemName.className = "skinner_essence_tint_name";
+            itemName.innerText = `${vd[bgArr[i]["bg"]]}`;
+
+            let itemColor = document.createElement("div");
+            itemColor.className = "skinner_essence_tint_hex";
+            itemColor.innerText = `${skin[vd[bgArr[i]["bg"]]]}`;
+            itemColor.style.color = `var(--${vd["nameTxt2"]})`;
+
+            item.style.borderRadius = `var(--${vd.nameRadius})`;
+
+            item.style.background = `var(--${vd[bgArr[i]["bg"]]})`;
+            item.style.color = `var(--${vd["nameTxt"]})`;
+
+            let itemTextWrapper = document.createElement("div");
+            itemTextWrapper.className = "skinner_essence_tint_texts_wrapper";
+
+            item.appendChild(nameHexWrapper);
+            nameHexWrapper.appendChild(itemName);
+            nameHexWrapper.appendChild(itemColor);
+            // item.appendChild(itemTextWrapper);
+            essenceTintWrapperTints.appendChild(item);
+        }
+
+        let rgbaWrapper = document.createElement("div");
+        rgbaWrapper.className = "skinner_essence_tint_with_opacity";
+        // rgbaWrapper.style.background = `linear-gradient(90deg, var(--${vd.nameBg2}), var(--${vd.nameBg3}), var(--${vd.nameBg2}))`;
+        // rgbaWrapper.style.borderRadius = `var(--${vd["nameRadius"]})`;
+        //   rgbaWrapper.style.background = `var(--${vd["nameBg"]})`;
+        let RGBAArr = [
+            // "nameRGBATransparent",
+            "nameRGBA",
+            "nameRGBA2",
+            "nameRGBA3",
+        ];
+        for (let j = 0; j < RGBAArr.length; j++) {
+            let NAME = vd[RGBAArr[j]];
+            let TXT = vd[RGBAArr[j]];
+            let BG = `var(--${TXT})`;
+            let BRD = `var(--${vd.nameRadius})`;
+            let HEX = skin[NAME];
+
+            let item = document.createElement("div");
+            item.className = "skinner_essence_tint";
+            let itemName = document.createElement("div");
+            let nameHexWrapper = document.createElement("div");
+
+            nameHexWrapper.className = "skinner_essence_tint_hex_wrapper";
+            itemName.className = "skinner_essence_tint_name";
+            itemName.innerText = NAME;
+            itemName.style.color = `var(--${vd["nameTxt"]})`;
+
+            let itemColor = document.createElement("div");
+            itemColor.className = "skinner_essence_tint_hex";
+            itemColor.innerText = HEX;
+            itemColor.style.color = `var(--${vd["nameTxt2"]})`;
+
+            item.style.borderRadius = BRD;
+            item.style.background = BG;
+            item.style.color = TXT;
+
+            nameHexWrapper.appendChild(itemName);
+            nameHexWrapper.appendChild(itemColor);
+            item.appendChild(nameHexWrapper);
+            essenceTintWrapperOverlays.appendChild(item);
+        }
+
+        let NAME = vd.nameAccent;
+        let VARBG = `var(--${vd.nameAccent})`;
+        let VARTXT = `var(--${vd.nameAccentTxt})`;
+        let VARBRD = `var(--${vd.nameRadius})`;
+        let HEX = skin[vd.nameAccent];
+        let item = document.createElement("div");
+        item.className = "skinner_essence_tint skinner_essence_tint_accent";
+
+        let itemName = document.createElement("div");
+        itemName.className = "skinner_essence_tint_name";
+        itemName.style.color = VARTXT;
+
+        let itemColor = document.createElement("div");
+        itemColor.className = "skinner_essence_tint_hex";
+        itemColor.style.color = VARTXT;
+
+        itemColor.innerText = HEX;
+        itemName.innerText = NAME;
+        item.style.borderRadius = VARBRD;
+        item.style.background = VARBG;
+        item.style.color = VARTXT;
+
+        let itemTextWrapper = document.createElement("div");
+        itemTextWrapper.className = "skinner_essence_tint_hex_wrapper";
+
+        itemTextWrapper.appendChild(itemName);
+        itemTextWrapper.appendChild(itemColor);
+        item.appendChild(itemTextWrapper);
+        essenceTintWrapperAccents.appendChild(item);
+    }
+
+    function buildHtmlForPresentation(el, vd, skin, themeName) {
+        el.innerHTML = null;
+
+        const rootEl = document.createElement("div");
+        rootEl.className = "skinner_essence_root";
+        const rootElHeading = document.createElement("div");
+        rootElHeading.className = "skinner_essence_root_heading";
+        rootElHeading.innerText = themeName;
+        el.appendChild(rootElHeading);
+        el.appendChild(rootEl);
+
+        for (let i = 0; i < co.length; i++) {
+            let vdd = vd(co[i].name);
+            buildHtmlForEssence(rootEl, vdd, skin);
+        }
+    }
 
     let c = 0;
     let themes = [];
-    for (const theme in builderConfig) {
-      themes.push(builderConfig[theme]);
+    for (const t in builderConfig) {
+        if (builderConfig.hasOwnProperty(t)) {
+            let theme = builderConfig[t];
+            theme.name = t;
+            themes.push(theme);
+        }
     }
 
-    let s = new Skinner(() => {}, 0, tinycolor);
+    let s = new Skinner(() => { }, tinycolor);
     let skin = s.init(themes[0]);
+    let co = s.getConfigOrder();
+    let vd = s.getVerbalDataGenerator();
+    let el = document.querySelector('.wrapper');
     addHTMLVars(s, skin);
+    buildHtmlForPresentation(el, vd, skin, themes[0].name);
     document.addEventListener("click", () => {
-      removeHTMLVars();
-      if (c > themes.length - 1) {
-        c = 0;
-      }
-      skin = s.init(themes[c]);
-      addHTMLVars(s, skin);
-      c += 1;
+        c += 1;
+
+        if (c > themes.length - 1) {
+            c = 0;
+        }
+        skin = s.init(themes[c]);
+        addHTMLVars(s, skin);
+        buildHtmlForPresentation(el, vd, skin, themes[c].name);
+
     });
 
-    function removeHTMLVars() {
-      let htmlEl = document.documentElement;
-      htmlEl.style = null;
-    }
+
 
     function addHTMLVars(_skinner, _skin) {
-      let co = _skinner.getConfigOrder();
-      let vd = _skinner.getVerbalDataGenerator();
 
-      let el = document.querySelector(".wrapper");
+        let co = _skinner.getConfigOrder();
+        let vd = _skinner.getVerbalDataGenerator();
 
-      let htmlEl = document.documentElement;
-      // let htmlBg = getOppositeColor(_skin["bodyBg"]);
-      // htmlEl.style.setProperty(`--skinnerBg`, htmlBg.bg);
-      // htmlEl.style.setProperty(`--skinnerTxt`, htmlBg.txt);
-      htmlEl.style.setProperty("overflowX", "hidder");
-      htmlEl.style.setProperty(
-        "background",
-        `linear-gradient(to right,#2d2940, #2e1f39, #3b1f30, #47292d, #43252b, #2e1f39, #2d2940)`
-      );
-      htmlEl.style.setProperty("fontSize", "16px");
-      for (let i = 0; i < co.length; i++) {
-        let vdd = vd(co[i].name);
-        buildHtmlForPresentation(el, vdd, _skin);
+        // Create a style element
+        let style = document.getElementById('skinnerVars');
+        if (!style) {
+            style = document.createElement('style');
+            style.id = 'skinnerVars';
+            document.head.appendChild(style);
+        }
 
-        htmlEl.style.setProperty(`--${vdd["nameBg"]}`, _skin[vdd["nameBg"]]);
-        htmlEl.style.setProperty(
-          `--${vdd["nameBgHov"]}`,
-          _skin[vdd["nameBgHov"]]
-        );
-        htmlEl.style.setProperty(`--${vdd["nameBg2"]}`, _skin[vdd["nameBg2"]]);
-        htmlEl.style.setProperty(
-          `--${vdd["nameBg2Hov"]}`,
-          _skin[vdd["nameBg2Hov"]]
-        );
-        htmlEl.style.setProperty(`--${vdd["nameBg3"]}`, _skin[vdd["nameBg3"]]);
-        htmlEl.style.setProperty(
-          `--${vdd["nameBg3Hov"]}`,
-          _skin[vdd["nameBg3Hov"]]
-        );
-        htmlEl.style.setProperty(
-          `--${vdd["nameRGBATransparent"]}`,
-          _skin[vdd["nameRGBATransparent"]]
-        );
-        htmlEl.style.setProperty(
-          `--${vdd["nameRGBA"]}`,
-          _skin[vdd["nameRGBA"]]
-        );
-        htmlEl.style.setProperty(
-          `--${vdd["nameRGBA2"]}`,
-          _skin[vdd["nameRGBA2"]]
-        );
-        htmlEl.style.setProperty(
-          `--${vdd["nameRGBA3"]}`,
-          _skin[vdd["nameRGBA3"]]
-        );
-        htmlEl.style.setProperty(
-          `--${vdd["nameAccent"]}`,
-          _skin[vdd["nameAccent"]]
-        );
-        htmlEl.style.setProperty(
-          `--${vdd["nameAccentTxt"]}`,
-          _skin[vdd["nameAccentTxt"]]
-        );
-        htmlEl.style.setProperty(`--${vdd["nameTxt"]}`, _skin[vdd["nameTxt"]]);
-        htmlEl.style.setProperty(
-          `--${vdd["nameTxt2"]}`,
-          _skin[vdd["nameTxt2"]]
-        );
-        htmlEl.style.setProperty(
-          `--${vdd["nameTxt3"]}`,
-          _skin[vdd["nameTxt3"]]
-        );
-        htmlEl.style.setProperty(
-          `--${vdd["nameBorder"]}`,
-          _skin[vdd["nameBorder"]]
-        );
-        htmlEl.style.setProperty(
-          `--${vdd["nameRadius"]}`,
-          _skin[vdd["nameRadius"]] + "px"
-        );
-      }
+        let styles = "";
+        styles += `:root{\n`;
+        // Generate CSS custom properties
+        for (let i = 0; i < co.length; i++) {
+            let vdd = vd(co[i].name);
+
+            styles += `--${vdd["nameBg"]}: ${_skin[vdd["nameBg"]]};\n`;
+            styles += `--${vdd["nameBgHov"]}: ${_skin[vdd["nameBgHov"]]};\n`;
+            styles += `--${vdd["nameBg2"]}: ${_skin[vdd["nameBg2"]]};\n`;
+            styles += `--${vdd["nameBg2Hov"]}: ${_skin[vdd["nameBg2Hov"]]};\n`;
+            styles += `--${vdd["nameBg3"]}: ${_skin[vdd["nameBg3"]]};\n`;
+            styles += `--${vdd["nameBg3Hov"]}: ${_skin[vdd["nameBg3Hov"]]};\n`;
+            styles += `--${vdd["nameRGBATransparent"]}: ${_skin[vdd["nameRGBATransparent"]]};\n`;
+            styles += `--${vdd["nameRGBA"]}: ${_skin[vdd["nameRGBA"]]};\n`;
+            styles += `--${vdd["nameRGBA2"]}: ${_skin[vdd["nameRGBA2"]]};\n`;
+            styles += `--${vdd["nameRGBA3"]}: ${_skin[vdd["nameRGBA3"]]};\n`;
+            styles += `--${vdd["nameAccent"]}: ${_skin[vdd["nameAccent"]]};\n`;
+            styles += `--${vdd["nameAccentTxt"]}: ${_skin[vdd["nameAccentTxt"]]};\n`;
+            styles += `--${vdd["nameTxt"]}: ${_skin[vdd["nameTxt"]]};\n`;
+            styles += `--${vdd["nameTxt2"]}: ${_skin[vdd["nameTxt2"]]};\n`;
+            styles += `--${vdd["nameTxt3"]}: ${_skin[vdd["nameTxt3"]]};\n`;
+            styles += `--${vdd["nameBorder"]}: ${_skin[vdd["nameBorder"]]};\n`;
+            styles += `--${vdd["nameRadius"]}: ${_skin[vdd["nameRadius"]]}px;\n`;
+
+        }
+        styles += `}\n`;
+
+        style.textContent = styles;
+
+        // Append the style element to the head of the document
+        document.head.appendChild(style);
     }
-  </script>
+
+
+</script>
+
 </html>
