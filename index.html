@@ -4,11 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;700&family=Inter:wght@400;500;700&display=swap"
-        rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;800&display=swap" rel="stylesheet">
     <title>Skinner</title>
     <style>
         * {
@@ -20,13 +18,13 @@
             overflow-x: hidden;
             background: linear-gradient(to right,
                     #2d2940, #2e1f39, #3b1f30, #47292d, #43252b, #2e1f39, #2d2940);
-            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
         }
 
         .skinner_essence_root {
             display: flex;
             flex-wrap: wrap;
-            font-family: "Afacad", sans-serif;
         }
 
         .skinner_essence_root_heading {
@@ -35,12 +33,11 @@
             align-items: centerR;
             font-size: 1.6em;
             margin-bottom: 8px;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: capitalize;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: "Afacad", sans-serif;
         }
 
         .skinner_essence_wrapper {
@@ -116,7 +113,7 @@
             align-items: center;
             font-size: 1.6em;
             margin-bottom: 8px;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: capitalize;
             display: flex;
             align-items: center;
@@ -290,21 +287,20 @@
         el.appendChild(essenceWrapper);
 
         const bgArr = [
-            { bg: "nameBg", txt: "nameTxt", sn: "Bg" },
-            { bg: "nameBgHov", txt: "nameTxt", sn: "Bg h" },
-            { bg: "nameBg2", txt: "nameTxt", sn: "Bg 2" },
-            { bg: "nameBg2Hov", txt: "nameTxt", sn: "Bg 2 h" },
-            { bg: "nameBg3", txt: "nameTxt", sn: "Bg 3" },
-            { bg: "nameBg3Hov", txt: "nameTxt", sn: "Bg 3 h" },
+            { bg: "nameBg", sn: "Bg" },
+            { bg: "nameBgHov", sn: "Bg h" },
+            { bg: "nameBg2", sn: "Bg 2" },
+            { bg: "nameBg2Hov", sn: "Bg 2 h" },
+            { bg: "nameBg3", sn: "Bg 3" },
+            { bg: "nameBg3Hov", sn: "Bg 3 h" },
         ];
 
         let essenceTintWrapper = document.createElement("div");
         essenceTintWrapper.className = "skinner_essence_tints_wrapper";
         essenceTintWrapper.style.background = `radial-gradient(
-        closest-side, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA3"]}))`;
+        closest-side, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA2"]}))`;
         essenceTintWrapper.style.border = `1px solid var(--${vd["nameRGBA3"]})`;
-        // essenceTintWrapper.style.background = `linear-gradient(
-        //     to bottom, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA3"]}))`;
+
         essenceTintWrapper.style.borderRadius = `var(--${vd["nameRadius"]})`;
 
         let essenceTintWrapperTints = document.createElement("div");
@@ -332,6 +328,10 @@
         essenceWrapper.appendChild(essenceTintWrapper);
 
         for (let i = 0; i < bgArr.length; i++) {
+            let j = i + 1;
+            let BRD = bgArr[j] ? bgArr[j] : bgArr[2];
+            BRD = BRD['bg'];
+            let BORDER = `1px solid var(--${vd[BRD]})`;
             let item = document.createElement("div");
             item.className = "skinner_essence_tint";
             let itemName = document.createElement("div");
@@ -349,6 +349,7 @@
             item.style.borderRadius = `var(--${vd.nameRadius})`;
 
             item.style.background = `var(--${vd[bgArr[i]["bg"]]})`;
+            item.style.border = BORDER;
             item.style.color = `var(--${vd["nameTxt"]})`;
 
             let itemTextWrapper = document.createElement("div");
