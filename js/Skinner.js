@@ -378,8 +378,7 @@ class Skinner {
     if (_isCustomAccentActive) {
       this.skin[_vb.nameAccent] = _customAccentColor;
     } else {
-      this.skin[_vb.nameAccent] =
-        this.mergedConfig.accent.Background.color;
+      this.skin[_vb.nameAccent] = this.mergedConfig.accent.Background.color;
     }
     console.log(this.mergedConfig.accent.Background.color);
     this.skin[_vb.nameAccentTxt] = this.tinycolor(
