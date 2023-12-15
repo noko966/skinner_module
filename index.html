@@ -289,7 +289,7 @@
 
       let essenceHeading = document.createElement("span");
       essenceHeading.className = "skinner_essence_heading";
-      essenceHeading.style.color = `var(--${vd["nameTxt"]})`;
+    //   essenceHeading.style.color = `var(--${vd["nameTxt"]})`;
 
       essenceHeading.innerText = vd.name;
 
@@ -306,9 +306,15 @@
 
       let essenceTintWrapper = document.createElement("div");
       essenceTintWrapper.className = "skinner_essence_tints_wrapper";
-      essenceTintWrapper.style.background = `radial-gradient(
-        closest-side, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA2"]}))`;
-      essenceTintWrapper.style.border = `1px solid var(--${vd["nameBgHov"]})`;
+    //   essenceTintWrapper.style.background = `radial-gradient(
+    //     closest-side, var(--${vd["nameRGBA3"]}), var(--${vd["nameRGBA2"]}))`;
+
+    let mixBg = tinycolor(`${skin[vd["nameBg"]]}`).isDark() ? "#ffffff" : "#000000" ;
+    let bg = tinycolor.mix(`${skin[vd["nameBg"]]}`, mixBg, 80);
+    let color = tinycolor.mostReadable(bg, ["#ffffff", "#000000"]).toHexString();
+    essenceTintWrapper.style.background = tinycolor.mix(`${skin[vd["nameBg"]]}`, mixBg, 80)
+    essenceTintWrapper.style.color = color;
+    essenceTintWrapper.style.border = `1px solid var(--${vd["nameBgHov"]})`;
 
       essenceTintWrapper.style.borderRadius = `var(--${vd["nameRadius"]})`;
 
