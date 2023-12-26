@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .tree {
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+      }
+
+      .node {
+        margin-left: 20px;
+        position: relative;
+      }
+
+      .node::before {
+        content: "";
+        width: 20px;
+        border-left: 2px solid #000;
+        position: absolute;
+        left: -20px;
+        top: 0;
+        bottom: 0;
+      }
+
+      .node::after {
+        content: "";
+        width: 20px;
+        border-top: 2px solid #000;
+        position: absolute;
+        left: -20px;
+        top: 0;
+      }
+
+      .children {
+        margin-top: 5px;
+      }
+
+      .children .node:last-child::before {
+        height: 50%;
+      }
+
+      .children .node:first-child::before {
+        top: 50%;
+      }
+    </style>
+  </head>
+  <body></body>
+  <script src="js2/TinyColor.js"></script>
+  <script src="Js2/Data.js"></script>
+  <script src="Js2/Skinne2.js"></script>
+
+  <script>
+    // Usage example
+    let rootNodes = [body, accent, brand]; // Assuming these are your root nodes
+    let skinner = new Skinner2(builderConfig.light, tinycolor, null, rootNodes);
+    let mc = skinner.init();
+  </script>
+</html>

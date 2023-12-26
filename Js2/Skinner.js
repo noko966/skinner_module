@@ -39,6 +39,7 @@ class Skinner {
       {
         name: "header",
         inherits: ["dominant", "body"],
+        variation: 5,
       },
       {
         name: "subHeader",
@@ -55,7 +56,7 @@ class Skinner {
       },
       {
         name: "odd",
-        inherits: ["brand"],
+        inherits: ["body"],
       },
       {
         name: "oddActive",
@@ -161,13 +162,11 @@ class Skinner {
         bg2: 8,
         bg3: 8,
         bgHov: 3,
-        step: 6,
       },
       light: {
         bg2: 8,
         bg3: 8,
         bgHov: 3,
-        step: 6,
       },
       alpha: {
         bg: 0.6,
@@ -276,44 +275,44 @@ class Skinner {
       this.skin[_vb.isDark] = _isDark;
     }
 
-    this.skin[_vb.nameBgHov] = this.skin[_vb.isDark]
-      ? this.tinycolor(this.skin[_vb.nameBg])
-          .darken(this.defaults.dark.step)
-          .toString()
-      : this.tinycolor(this.skin[_vb.nameBg])
-          .lighten(this.defaults.light.step)
-          .toString();
-
     this.skin[_vb.nameBg2] = this.skin[_vb.isDark]
       ? this.tinycolor(this.skin[_vb.nameBg])
-          .darken(this.defaults.dark.step * 2)
+          .darken(this.defaults.dark.bg2)
           .toString()
       : this.tinycolor(this.skin[_vb.nameBg])
-          .lighten(this.defaults.dark.step * 2)
-          .toString();
-
-    this.skin[_vb.nameBg2Hov] = this.skin[_vb.isDark]
-      ? this.tinycolor(this.skin[_vb.nameBg])
-          .darken(this.defaults.dark.step * 3)
-          .toString()
-      : this.tinycolor(this.skin[_vb.nameBg])
-          .lighten(this.defaults.light.step * 3)
+          .lighten(this.defaults.light.bg2)
           .toString();
 
     this.skin[_vb.nameBg3] = this.skin[_vb.isDark]
+      ? this.tinycolor(this.skin[_vb.nameBg2])
+          .darken(this.defaults.dark.bg3)
+          .toString()
+      : this.tinycolor(this.skin[_vb.nameBg2])
+          .lighten(this.defaults.light.bg3)
+          .toString();
+
+    this.skin[_vb.nameBgHov] = this.skin[_vb.isDark]
       ? this.tinycolor(this.skin[_vb.nameBg])
-          .darken(this.defaults.dark.step * 4)
+          .darken(this.defaults.dark.bgHov)
           .toString()
       : this.tinycolor(this.skin[_vb.nameBg])
-          .lighten(this.defaults.light.step * 4)
+          .lighten(this.defaults.light.bgHov)
+          .toString();
+
+    this.skin[_vb.nameBg2Hov] = this.skin[_vb.isDark]
+      ? this.tinycolor(this.skin[_vb.nameBg2])
+          .darken(this.defaults.dark.bgHov)
+          .toString()
+      : this.tinycolor(this.skin[_vb.nameBg2])
+          .lighten(this.defaults.light.bgHov)
           .toString();
 
     this.skin[_vb.nameBg3Hov] = this.skin[_vb.isDark]
-      ? this.tinycolor(this.skin[_vb.nameBg])
-          .darken(this.defaults.dark.step * 5)
+      ? this.tinycolor(this.skin[_vb.nameBg3])
+          .darken(this.defaults.dark.bgHov)
           .toString()
-      : this.tinycolor(this.skin[_vb.nameBg])
-          .lighten(this.defaults.light.step * 5)
+      : this.tinycolor(this.skin[_vb.nameBg3])
+          .lighten(this.defaults.light.bgHov)
           .toString();
 
     this.skin[_vb.nameRGBATransparent] = this.tinycolor(this.skin[_vb.nameBg])
@@ -481,15 +480,6 @@ class Skinner {
     data.nameRadius = data.name + "Radius";
 
     return data;
-  }
-
-  generateOppositeTint(bg) {
-    let bg2 = tinycolor(bg2).isDark() ? "#ffffff" : "#000000";
-    tinycolor.mix(bg, clr2, 80);
-  }
-
-  getReadableText(bg) {
-    tinycolor.mostReadable(bg, ["#ffffff", "#000000"]).toHexString();
   }
 
   generateTheme() {
