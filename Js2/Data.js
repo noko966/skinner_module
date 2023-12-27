@@ -81,7 +81,8 @@ let builderConfig = {
     body: {
       Background: {
         color: "#222222 ",
-        isDark: !tinycolor("#222222").isDark(),
+        isActive: true,
+        isDark: false,
       },
       Text: {
         color: "#ffffff",
@@ -90,7 +91,7 @@ let builderConfig = {
     accent: {
       Background: {
         color: "#4173a6",
-        isDark: !tinycolor("#4173a6").isDark(),
+        isActive: true,
       },
       Text: {
         color: "#fff",
@@ -99,7 +100,7 @@ let builderConfig = {
     brand: {
       Background: {
         color: "#5b9dcd",
-        isDark: !tinycolor("#5b9dcd").isDark(),
+        isActive: true,
       },
       Text: {
         color: "#fff",

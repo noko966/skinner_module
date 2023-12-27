@@ -1,14 +1,10 @@
-
 class TreeNode {
   constructor(name, parent = null) {
     this.name = name;
     this.children = [];
     this.parent = parent;
 
-    this.skin = {
-
-    }
-
+    this.skin = {};
   }
 
   addChild(childNode) {
@@ -94,7 +90,35 @@ class Skinner2 {
     this.getConfigBlueprint = this.getConfigBlueprint.bind(this);
     this.generateConfigFromInput = this.generateConfigFromInput.bind(this);
     this.mergeConfig = this.mergeConfig.bind(this);
+  }
 
+  applyColorByNesting(selector, attribute) {
+    let self = this;
+    let vd = this.verbalData(attribute);
+    const colors = [
+      this.skin[vd.nameBg],
+      this.skin[vd.nameBg2],
+      this.skin[vd.nameBg3],
+    ]; // Colors for different levels
+
+    function colorize(element, level) {
+      // debugger;
+      if (element.tagName !== "SPAN") {
+        // Apply color based on level, loop if level exceeds colors array length
+        element.style.backgroundColor = colors[level % colors.length];
+        element.classList.add("colored"); // Add class for styling
+        element.classList.add("colored");
+        element.style.color = self.skin[vd.nameTxt];
+      }
+      // Recursively call this function for each child element
+      Array.from(element.children).forEach((child) =>
+        colorize(child, level + 1)
+      );
+    }
+
+    // Start with the initial element(s)
+    const elements = document.querySelectorAll(selector);
+    elements.forEach((el) => colorize(el, 0));
   }
 
   addHTMLDoomy() {
@@ -153,7 +177,7 @@ class Skinner2 {
 
     // Create a style element
     let container = document.createElement("div");
-    container.className = 'skinner_HTML_container';
+    container.className = "skinner_HTML_container";
     document.body.appendChild(container);
 
     function createEssenceHTML(bg, txt, txt2, txt3) {
@@ -161,14 +185,14 @@ class Skinner2 {
       essenceBg.className = `skinner_HTML_box`;
       essenceBg.style.backgroundColor = bg;
       let essenceTxt = document.createElement("div");
-      essenceTxt.innerText = 'important text content';
+      essenceTxt.innerText = "important text content";
       essenceTxt.style.color = txt;
       let essenceTxt2 = document.createElement("div");
       essenceTxt2.style.color = txt2;
-      essenceTxt2.innerText = 'text content';
+      essenceTxt2.innerText = "text content";
       let essenceTxt3 = document.createElement("div");
       essenceTxt3.style.color = txt3;
-      essenceTxt3.innerText = 'minor text content';
+      essenceTxt3.innerText = "minor text content";
       essenceBg.appendChild(essenceTxt);
       essenceBg.appendChild(essenceTxt2);
       essenceBg.appendChild(essenceTxt3);
@@ -181,36 +205,49 @@ class Skinner2 {
       // Create a style element
 
       let essenceContainer = document.createElement("div");
-      essenceContainer.className = 'skinner_HTML_box_container';
+      essenceContainer.className = "skinner_HTML_box_container";
       essenceContainer.style.background = `var(--${vd["nameBg"]})`;
       container.appendChild(essenceContainer);
 
-
       let essenceHeading = document.createElement("div");
-      essenceHeading.className = 'skinner_HTML_box_heading';
+      essenceHeading.className = "skinner_HTML_box_heading";
       essenceHeading.style.color = `var(--${vd["nameTxt"]})`;
       essenceHeading.innerText = `${vd["name"]}`;
       essenceContainer.appendChild(essenceHeading);
 
-      let bg = createEssenceHTML(`var(--${vd["nameBg"]})`, `var(--${vd["nameTxt"]})`, `var(--${vd["nameTxt2"]})`, `var(--${vd["nameTxt3"]})`);
-      let bg1 = createEssenceHTML(`var(--${vd["nameBg2"]})`, `var(--${vd["nameTxt"]})`, `var(--${vd["nameTxt2"]})`, `var(--${vd["nameTxt3"]})`);
-      let bg2 = createEssenceHTML(`var(--${vd["nameBg3"]})`, `var(--${vd["nameTxt"]})`, `var(--${vd["nameTxt2"]})`, `var(--${vd["nameTxt3"]})`);
-
+      let bg = createEssenceHTML(
+        `var(--${vd["nameBg"]})`,
+        `var(--${vd["nameTxt"]})`,
+        `var(--${vd["nameTxt2"]})`,
+        `var(--${vd["nameTxt3"]})`
+      );
+      let bg1 = createEssenceHTML(
+        `var(--${vd["nameBg2"]})`,
+        `var(--${vd["nameTxt"]})`,
+        `var(--${vd["nameTxt2"]})`,
+        `var(--${vd["nameTxt3"]})`
+      );
+      let bg2 = createEssenceHTML(
+        `var(--${vd["nameBg3"]})`,
+        `var(--${vd["nameTxt"]})`,
+        `var(--${vd["nameTxt2"]})`,
+        `var(--${vd["nameTxt3"]})`
+      );
 
       essenceContainer.appendChild(bg);
       essenceContainer.appendChild(bg1);
       essenceContainer.appendChild(bg2);
 
       if (node.children && node.children.length > 0) {
-        node.children.forEach(child => {
+        node.children.forEach((child) => {
           addHTMLGroup(child); // Recursive call
         });
       }
     }
 
-    this.rootNodes.forEach(node => {
+    this.rootNodes.forEach((node) => {
       addHTMLGroup(node);
-    })
+    });
 
     style.textContent = styles;
   }
@@ -229,7 +266,6 @@ class Skinner2 {
     styles += `:root{\n`;
     // Generate CSS custom properties
 
-
     function addVariableGroup(node) {
       let vd = self.verbalData(node.name);
 
@@ -242,15 +278,15 @@ class Skinner2 {
       styles += `--${vd["nameTxt3"]}: ${self.skin[vd["nameTxt3"]]};\n`;
 
       if (node.children && node.children.length > 0) {
-        node.children.forEach(child => {
+        node.children.forEach((child) => {
           addVariableGroup(child); // Recursive call
         });
       }
     }
 
-    this.rootNodes.forEach(node => {
+    this.rootNodes.forEach((node) => {
       addVariableGroup(node);
-    })
+    });
     styles += `}\n`;
     style.textContent = styles;
 
@@ -285,8 +321,6 @@ class Skinner2 {
     };
   }
 
-
-
   generateConfigFromInput(node) {
     /* Background.color: */
     let incoming = node.name;
@@ -317,13 +351,10 @@ class Skinner2 {
       borderRadius: 4,
     };
 
-
     let mergedConfPeace = { ...confPeace, ...incomingConfig };
 
     node.cfg = mergedConfPeace;
   }
-
-
 
   generateConfigMissingValues() {
     let self = this;
@@ -332,22 +363,22 @@ class Skinner2 {
         let parentValue = node.parent.cfg.Background.color;
         let parentIsDark = self.TC(parentValue).isDark();
         node.cfg.Background.isDark = parentIsDark;
-        node.cfg.Background.color = parentIsDark ? self.TC(parentValue).lighten(10).toHexString() : self.TC(parentValue).darken(10).toHexString();
+        node.cfg.Background.color = parentIsDark
+          ? self.TC(parentValue).lighten(10).toHexString()
+          : self.TC(parentValue).darken(10).toHexString();
       }
 
       if (node.children && node.children.length > 0) {
-        node.children.forEach(child => {
+        node.children.forEach((child) => {
           configFromParent(child); // Recursive call
         });
       }
     }
 
-    this.rootNodes.forEach(node => {
+    this.rootNodes.forEach((node) => {
       configFromParent(node);
-    })
+    });
   }
-
-
 
   mergeConfig() {
     let self = this;
@@ -357,7 +388,7 @@ class Skinner2 {
       self.generateConfigFromInput(node);
       // If the node has children, process each child
       if (node.children && node.children.length > 0) {
-        node.children.forEach(child => {
+        node.children.forEach((child) => {
           processNode(child); // Recursive call
         });
       }
@@ -411,7 +442,6 @@ class Skinner2 {
     return data;
   }
 
-
   makeColorPalette() {
     let self = this;
     function processNode(node) {
@@ -420,7 +450,7 @@ class Skinner2 {
       self.makeText(node);
       // If the node has children, process each child
       if (node.children && node.children.length > 0) {
-        node.children.forEach(child => {
+        node.children.forEach((child) => {
           processNode(child); // Recursive call
         });
       }
@@ -429,7 +459,6 @@ class Skinner2 {
     this.rootNodes.forEach((node) => {
       processNode(node);
     });
-
   }
 
   makeBackgrounds(node) {
@@ -440,21 +469,31 @@ class Skinner2 {
     let vd = this.verbalData(node.name);
 
     this.skin[vd.nameBg] = tc(startColor).toHexString();
-    this.skin[vd.nameBg2] = isDark ? tc(this.skin[vd.nameBg]).lighten(this.defaults.light.bg2).toHexString() : tc(this.skin[vd.nameBg]).darken(this.defaults.light.bg2).toHexString();
-    this.skin[vd.nameBg3] = isDark ? tc(this.skin[vd.nameBg2]).lighten(this.defaults.light.bg2).toHexString() : tc(this.skin[vd.nameBg2]).darken(this.defaults.light.bg2).toHexString();
+    this.skin[vd.nameBg2] = isDark
+      ? tc(this.skin[vd.nameBg]).lighten(this.defaults.light.bg2).toHexString()
+      : tc(this.skin[vd.nameBg]).darken(this.defaults.light.bg2).toHexString();
+    this.skin[vd.nameBg3] = isDark
+      ? tc(this.skin[vd.nameBg2]).lighten(this.defaults.light.bg2).toHexString()
+      : tc(this.skin[vd.nameBg2]).darken(this.defaults.light.bg2).toHexString();
   }
-
 
   makeText(node) {
     let tc = this.TC;
     let cfg = node.cfg;
     let vd = this.verbalData(node.name);
-    let textColor = tc.mostReadable(this.skin[vd.nameBg], ["#ffffff", "#000000"]).toHexString();
+    let textColor = tc
+      .mostReadable(this.skin[vd.nameBg], ["#ffffff", "#000000"])
+      .toHexString();
 
-    this.skin[vd.nameTxt] = tc.mix(textColor, this.skin[vd.nameBg], this.defaults.txt.txt).toHexString();
-    this.skin[vd.nameTxt2] = tc.mix(textColor, this.skin[vd.nameBg], this.defaults.txt.txt2).toHexString();
-    this.skin[vd.nameTxt3] = tc.mix(textColor, this.skin[vd.nameBg], this.defaults.txt.txt3).toHexString();
-
+    this.skin[vd.nameTxt] = tc
+      .mix(textColor, this.skin[vd.nameBg], this.defaults.txt.txt)
+      .toHexString();
+    this.skin[vd.nameTxt2] = tc
+      .mix(textColor, this.skin[vd.nameBg], this.defaults.txt.txt2)
+      .toHexString();
+    this.skin[vd.nameTxt3] = tc
+      .mix(textColor, this.skin[vd.nameBg], this.defaults.txt.txt3)
+      .toHexString();
   }
 
   setConfig(config) {
@@ -466,9 +505,13 @@ class Skinner2 {
     return this.МCFG;
   }
 
+  /**Useful REG                  (background-color|color|border(?:-[^:]*color)?|outline(?:-color)?|fill|stroke):\s*[^;]+;                 */
+  /**Useful REG                  <([a-z]+)([^>]*?class=["'][^"']*?l_od[^"']*?["'])([^>]*?)>   replace     <$1$2$3 data-nested="odd">
+   */
+
   init() {
-    document.body.style.background = "#212121";
-    document.body.style.color = "#999999";
+    // document.body.style.background = "#212121";
+    // document.body.style.color = "#999999";
     this.mergeConfig();
     this.generateConfigMissingValues();
     this.makeColorPalette();
