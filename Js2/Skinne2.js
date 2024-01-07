@@ -3,7 +3,6 @@ class TreeNode {
     this.name = name;
     this.children = [];
     this.parent = parent;
-
     this.skin = {};
   }
 
@@ -62,18 +61,17 @@ class Skinner2 {
     this.skin = {};
     this.isUIVisible = true;
     this.version = "2.0.0";
+    this.tintsCount = 8;
+
     this.defaults = {
       dark: {
-        bg2: 8,
-        bg3: 8,
+        step: 1,
         bgHov: 3,
-        step: 4,
       },
       light: {
-        bg2: 8,
+        step: 1,
         bg3: 8,
         bgHov: 3,
-        step: 4,
       },
       alpha: {
         bg: 0.6,
@@ -81,6 +79,7 @@ class Skinner2 {
         bg3: 0.2,
       },
       txt: {
+        step: 22,
         txt: 10,
         txt2: 20,
         txt3: 40,
@@ -92,33 +91,83 @@ class Skinner2 {
     this.mergeConfig = this.mergeConfig.bind(this);
   }
 
-  applyColorByNesting(selector, attribute) {
+  applyColorByNesting(essence) {
+    const elements = document.querySelectorAll("[data-nest]");
+
+    const rootToStartColor = [];
+
+    elements.forEach((el) => {
+      // Check if the 'data-nest' attribute value is 'ads'
+      if (el.getAttribute("data-nest") === essence) {
+        // Add the element to the adsElements array
+        rootToStartColor.push(el);
+      }
+    });
+
     let self = this;
-    let vd = this.verbalData(attribute);
+    let vd = this.verbalData(essence);
     const colors = [
-      this.skin[vd.nameBg],
-      this.skin[vd.nameBg2],
-      this.skin[vd.nameBg3],
-    ]; // Colors for different levels
+      `var(--${vd["nameBg"]})`,
+      `var(--${vd["nameBg2"]})`,
+      `var(--${vd["nameBg3"]})`,
+    ];
+
+    rootToStartColor.forEach((s) => colorize(s, 0));
 
     function colorize(element, level) {
-      // debugger;
-      if (element.tagName !== "SPAN") {
-        // Apply color based on level, loop if level exceeds colors array length
-        element.style.backgroundColor = colors[level % colors.length];
-        element.classList.add("colored"); // Add class for styling
-        element.classList.add("colored");
+      let lvl = level % colors.length;
+      let lvlShift = (level - 1) % colors.length;
+
+      // Check if the element has padding, gap, or grid-gap
+      const hasPaddingOrGap =
+        getComputedStyle(element).padding !== "0px" ||
+        getComputedStyle(element).gap !== "0px" ||
+        getComputedStyle(element).gridGap !== "0px";
+
+      if (hasPaddingOrGap) {
+        element.style.backgroundColor = colors[lvl];
         element.style.color = self.skin[vd.nameTxt];
+        element.style.borderColor = colors[lvlShift];
       }
+
       // Recursively call this function for each child element
       Array.from(element.children).forEach((child) =>
         colorize(child, level + 1)
       );
     }
 
+    function colorize(element, level) {
+      // const pureSel = sel.slice(1, -1);
+      if (element.classList.contains("skinner_HTML_container")) {
+        return;
+      }
+      const hasPaddingOrGap =
+        getComputedStyle(element).padding !== "0px" ||
+        getComputedStyle(element).gap !== "0px" ||
+        getComputedStyle(element).gridGap !== "0px";
+
+      console.log(hasPaddingOrGap);
+
+      let lvl = level % colors.length;
+      let lvlShift = (level - 1) % colors.length;
+      if (hasPaddingOrGap) {
+        element.style.backgroundColor = colors[lvl];
+        element.classList.add(`colored___${essence.toUpperCase()}___`);
+        element.style.color = self.skin[vd.nameTxt];
+        element.style.borderColor = colors[lvlShift];
+      }
+
+      Array.from(element.children).forEach((child) =>
+        colorize(child, level + 1)
+      );
+      // Recursively call this function for each child element
+    }
+
     // Start with the initial element(s)
-    const elements = document.querySelectorAll(selector);
-    elements.forEach((el) => colorize(el, 0));
+    // if (element.getAttribute("data-nest") !== essence) {
+    //   const elements = document.querySelectorAll("[data-nest]");
+    //   elements.forEach((el) => colorize(el));
+    // }
   }
 
   addHTMLDoomy() {
@@ -140,11 +189,13 @@ class Skinner2 {
       box-sizing: border-box;
     }
     .skinner_HTML_container {
-      font-family: arial;
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      grid-gap: 32px;
-      padding: 32px;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 16px;
+      padding: 16px;
+      font-family: 'Nunito Sans', sans-serif;
+      background: var(--bodyBg);
+      
     }
     .skinner_HTML_box_heading{
       font-size: 20px;
@@ -154,24 +205,34 @@ class Skinner2 {
       padding: 0 16px;
     }
     .skinner_HTML_box_container{
-      padding: 8px;
-      border-radius: 8px;
+      padding: 16px;
+      border-radius: 12px;
     }
     .skinner_HTML_box {
-      padding: 8px 16px;
+      padding: 8px 12px;
       display: grid;
-      grid-gap: 6px;
+      grid-gap: 4px;
       grid-template-rows: repeat(3, 1fr);
-      font-weight: 700;
+      font-weight: 500;
       font-size: 14px;
     }
+    .skinner_HTML_box > div:nth-child(2){
+      font-size: 0.9em;
+      font-weight: 400;
+
+    }
+    .skinner_HTML_box > div:nth-child(3){
+      font-size: 0.8em;
+      font-weight: 400;
+
+    }
     .skinner_HTML_box:first-child{
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
     }
     .skinner_HTML_box:last-child{
-      border-bottom-left-radius: 4px;
-      border-bottom-right-radius: 4px;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
     }
     `;
 
@@ -185,14 +246,14 @@ class Skinner2 {
       essenceBg.className = `skinner_HTML_box`;
       essenceBg.style.backgroundColor = bg;
       let essenceTxt = document.createElement("div");
-      essenceTxt.innerText = "important text content";
+      essenceTxt.innerText = "Primary Primary Primary";
       essenceTxt.style.color = txt;
       let essenceTxt2 = document.createElement("div");
       essenceTxt2.style.color = txt2;
-      essenceTxt2.innerText = "text content";
+      essenceTxt2.innerText = `Secondary Secondary  `;
       let essenceTxt3 = document.createElement("div");
       essenceTxt3.style.color = txt3;
-      essenceTxt3.innerText = "minor text content";
+      essenceTxt3.innerText = "Tertiary";
       essenceBg.appendChild(essenceTxt);
       essenceBg.appendChild(essenceTxt2);
       essenceBg.appendChild(essenceTxt3);
@@ -207,6 +268,7 @@ class Skinner2 {
       let essenceContainer = document.createElement("div");
       essenceContainer.className = "skinner_HTML_box_container";
       essenceContainer.style.background = `var(--${vd["nameBg"]})`;
+      essenceContainer.style.border = `2px solid var(--${vd["nameBg3"]})`;
       container.appendChild(essenceContainer);
 
       let essenceHeading = document.createElement("div");
@@ -221,22 +283,26 @@ class Skinner2 {
         `var(--${vd["nameTxt2"]})`,
         `var(--${vd["nameTxt3"]})`
       );
-      let bg1 = createEssenceHTML(
-        `var(--${vd["nameBg2"]})`,
-        `var(--${vd["nameTxt"]})`,
-        `var(--${vd["nameTxt2"]})`,
-        `var(--${vd["nameTxt3"]})`
-      );
-      let bg2 = createEssenceHTML(
-        `var(--${vd["nameBg3"]})`,
-        `var(--${vd["nameTxt"]})`,
-        `var(--${vd["nameTxt2"]})`,
-        `var(--${vd["nameTxt3"]})`
-      );
 
+      let bg1 = bg;
       essenceContainer.appendChild(bg);
       essenceContainer.appendChild(bg1);
-      essenceContainer.appendChild(bg2);
+
+      const tintsCount = self.tintsCount;
+
+      styles += `--${vd["nameBg"]}: ${self.skin[vd["nameBg"]]};\n`;
+      styles += `--${vd["nameBg1"]}: ${self.skin[vd["nameBg1"]]};\n`;
+
+      for (let t = 2; t < tintsCount; t++) {
+        let bg = createEssenceHTML(
+          `var(--${vd[`nameBg${t}`]})`,
+          `var(--${vd["nameTxt"]})`,
+          `var(--${vd["nameTxt2"]})`,
+          `var(--${vd["nameTxt3"]})`
+        );
+
+        essenceContainer.appendChild(bg);
+      }
 
       if (node.children && node.children.length > 0) {
         node.children.forEach((child) => {
@@ -268,10 +334,13 @@ class Skinner2 {
 
     function addVariableGroup(node) {
       let vd = self.verbalData(node.name);
+      const tintsCount = self.tintsCount;
 
       styles += `--${vd["nameBg"]}: ${self.skin[vd["nameBg"]]};\n`;
-      styles += `--${vd["nameBg2"]}: ${self.skin[vd["nameBg2"]]};\n`;
-      styles += `--${vd["nameBg3"]}: ${self.skin[vd["nameBg3"]]};\n`;
+      styles += `--${vd["nameBg1"]}: ${self.skin[vd["nameBg1"]]};\n`;
+      for (let t = 2; t < tintsCount; t++) {
+        styles += `--${vd[`nameBg${t}`]}: ${self.skin[vd[`nameBg${t}`]]};\n`;
+      }
 
       styles += `--${vd["nameTxt"]}: ${self.skin[vd["nameTxt"]]};\n`;
       styles += `--${vd["nameTxt2"]}: ${self.skin[vd["nameTxt2"]]};\n`;
@@ -364,8 +433,8 @@ class Skinner2 {
         let parentIsDark = self.TC(parentValue).isDark();
         node.cfg.Background.isDark = parentIsDark;
         node.cfg.Background.color = parentIsDark
-          ? self.TC(parentValue).lighten(10).toHexString()
-          : self.TC(parentValue).darken(10).toHexString();
+          ? self.TC(parentValue).lighten(5).toHexString()
+          : self.TC(parentValue).darken(5).toHexString();
       }
 
       if (node.children && node.children.length > 0) {
@@ -401,6 +470,8 @@ class Skinner2 {
 
   verbalData(name) {
     let data = {};
+    const tintsCount = this.tintsCount;
+
     data.name = name;
     data.nameBg = data.name + "Bg";
     data.nameBg_g = data.nameBg + "_g";
@@ -410,11 +481,11 @@ class Skinner2 {
     data.nameRGBA2 = data.name + "RGBA2";
     data.nameRGBA3 = data.name + "RGBA3";
     data.nameG2 = data.nameG + "2";
-    data.nameBgHov = data.nameBg + "Hover";
-    data.nameBg2 = data.nameBg + "2";
-    data.nameBg2Hov = data.nameBg2 + "Hover";
-    data.nameBg3 = data.nameBg + "3";
-    data.nameBg3Hov = data.nameBg3 + "Hover";
+    data.nameBg1 = data.nameBg + "1";
+
+    for (let i = 2; i < tintsCount; i++) {
+      data[`nameBg${i}`] = data.nameBg + i;
+    }
     data.upperCaseName = data.name[0].toUpperCase() + data.name.substring(1);
     data.isName = "is" + data.upperCaseName + "Bg";
     data.isGradient = "is" + data.upperCaseName + "Gradient";
@@ -468,13 +539,18 @@ class Skinner2 {
     let isDark = cfg.Background.color.isDark;
     let vd = this.verbalData(node.name);
 
+    const tintsCount = this.tintsCount;
     this.skin[vd.nameBg] = tc(startColor).toHexString();
-    this.skin[vd.nameBg2] = isDark
-      ? tc(this.skin[vd.nameBg]).lighten(this.defaults.light.bg2).toHexString()
-      : tc(this.skin[vd.nameBg]).darken(this.defaults.light.bg2).toHexString();
-    this.skin[vd.nameBg3] = isDark
-      ? tc(this.skin[vd.nameBg2]).lighten(this.defaults.light.bg2).toHexString()
-      : tc(this.skin[vd.nameBg2]).darken(this.defaults.light.bg2).toHexString();
+    this.skin[vd.nameBg1] = tc(startColor).toHexString();
+    for (let i = 2; i < tintsCount; i++) {
+      this.skin[vd[`nameBg${i}`]] = isDark
+        ? tc(this.skin[vd[`nameBg${i - 1}`]])
+            .lighten(this.defaults.light.step)
+            .toHexString()
+        : tc(this.skin[vd[`nameBg${i - 1}`]])
+            .darken(this.defaults.light.step)
+            .toHexString();
+    }
   }
 
   makeText(node) {
@@ -486,13 +562,13 @@ class Skinner2 {
       .toHexString();
 
     this.skin[vd.nameTxt] = tc
-      .mix(textColor, this.skin[vd.nameBg], this.defaults.txt.txt)
+      .mix(textColor, this.skin[vd.nameBg], this.defaults.txt.step)
       .toHexString();
     this.skin[vd.nameTxt2] = tc
-      .mix(textColor, this.skin[vd.nameBg], this.defaults.txt.txt2)
+      .mix(textColor, this.skin[vd.nameBg], this.defaults.txt.step * 2)
       .toHexString();
     this.skin[vd.nameTxt3] = tc
-      .mix(textColor, this.skin[vd.nameBg], this.defaults.txt.txt3)
+      .mix(textColor, this.skin[vd.nameBg], this.defaults.txt.step * 3)
       .toHexString();
   }
 

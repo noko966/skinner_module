@@ -99,7 +99,7 @@ let builderConfig = {
     },
     brand: {
       Background: {
-        color: "#5b9dcd",
+        color: "#ff5000",
         isActive: true,
       },
       Text: {
