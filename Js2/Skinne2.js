@@ -66,11 +66,11 @@ class Skinner2 {
     this.skinnerControls = {};
 
     this.UIColors = {
-      sk_bodyBg: "#1a1a1a",
-      sk_bodyBg2: "#2e2e2e",
-      sk_bodyBg3: "#585858",
-      sk_bodyTxt: "#ffffff",
-      sk_bodyTxt2: "#cccccc",
+      sk_bodyBg: "#dedede",
+      sk_bodyBg2: "#d5d5d5",
+      sk_bodyBg3: "#e5e5e5",
+      sk_bodyTxt: "#222",
+      sk_bodyTxt2: "#333",
     };
 
     this.defaults = {
@@ -560,8 +560,16 @@ class Skinner2 {
     let vd = this.verbalData(node.name);
 
     const tintsCount = this.tintsCount;
-    this.skin[vd.nameBg] = tc(startColor).toHexString();
-    this.skin[vd.nameBg1] = tc(startColor).toHexString();
+    if(node.cfg.Background.isActive){
+      let bg =  node.cfg.Background.color;
+      this.skin[vd.nameBg] = tc(bg).toHexString();
+      this.skin[vd.nameBg1] = tc(bg).toHexString();
+    }
+    else{
+      let bgParent =  node.parent.cfg.Background.color;
+      this.skin[vd.nameBg] = tc(bgParent).toHexString();
+      this.skin[vd.nameBg1] = tc(bgParent).toHexString();
+    }
     for (let i = 2; i < tintsCount; i++) {
       this.skin[vd[`nameBg${i}`]] = isDark
         ? tc(this.skin[vd[`nameBg${i - 1}`]])
@@ -628,20 +636,38 @@ class Skinner2 {
     let self = this;
 
     function processNode(node) {
+      const vd = self.verbalData(node.name);
       // Process the current node
       const n = node.name;
       const row = document.createElement("div");
+      const nameEl = document.createElement("span");
+      nameEl.innerText = n;
+      nameEl.style.fontSize = '1.4em';
+      nameEl.style.width = '100px';
+      nameEl.style.overflow = 'hidden';
+      nameEl.style.textOverflow = 'ellipsis';
+      nameEl.style.whiteSpace = 'nowrap';
+      row.style.background = self.UIColors.sk_bodyBg2;
+      row.style.border = `1px solid ${self.UIColors.sk_bodyBg}`;
       row.style.display = "flex";
       row.style.alignItems = "center";
+      row.style.padding = "6px 12px";
       const chb = self.createCheckbox(node, "Background", "isActive");
       const cntrl = self.createPicker(node, "Background", "color");
+      const chb2 = self.createCheckbox(node, "Background", "isDark");
       parent.appendChild(row);
+      row.appendChild(nameEl);
       row.appendChild(chb);
       row.appendChild(cntrl);
+      row.appendChild(chb2);
       const ia = `isActive${node.name}`;
       const bg = `bg${node.name}`;
       self.skinnerControls[bg] = cntrl;
       self.skinnerControls[ia] = chb;
+      node.controls = {};
+      node.controls[vd.isName] = chb;
+      node.controls[vd.nameBg] = cntrl;
+      node.controls[vd.isDark] = chb2;
 
       // If the node has children, process each child
       if (node.children && node.children.length > 0) {
@@ -668,11 +694,8 @@ class Skinner2 {
       // If the node has children, process each child
       if (node.children && node.children.length > 0) {
         node.children.forEach((child) => {
-          if (child.cfg.Background.isActive) {
-            processNode(child); // Recursive call
-          } else {
-            processNode(child); // Recursive call
-          }
+          processNode(child);
+          
         });
       }
     }
@@ -691,7 +714,7 @@ class Skinner2 {
     chb.checked = node.cfg[grp][key];
 
     chb.addEventListener("change", (e) => {
-      self.updateEssence(node, grp, key, e.checked);
+      self.updateEssence(node, grp, key, e.currentTarget.checked);
     });
 
     return chb;
@@ -754,10 +777,10 @@ class Skinner2 {
     UIwrapper.style.transform = "translateX(-50%)";
     UIwrapper.style.background = this.UIColors.sk_bodyBg;
     UIwrapper.style.color = this.UIColors.sk_bodyTxt;
-    UIwrapper.style.width = "600px";
+    UIwrapper.style.width = "420px";
     UIwrapper.style.height = "300px";
     UIwrapper.style.overflowY = "auto";
-    UIwrapper.style.borderRadius = "12px 12px 0 0";
+    UIwrapper.style.borderRadius = "8px 8px 0 0";
     // UIwrapper.style.padding = "12px 16px";
 
     this.createSkinnerControls(UIwrapper);

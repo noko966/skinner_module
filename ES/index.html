@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>es</title>
+    <link rel="stylesheet" href="skin.css">
+    <link rel="stylesheet" href="es.css">
+</head>
+
+<body>
+
+    <div class="evt_root">
+        <div class="evt_head">
+            <div class="es_head_inner">
+                <div>
+                    <img src="https://cdn-sp.kertn.net/assets/esport/211524.png" alt="">
+                    <span class="es_head_txt">Russia. Premier League. Matchweek</span>
+                    <i class="es_live_indicator"></i>
+                </div>
+                    <i class="es_glyph_caret_double_down "></i>
+            </div>
+        </div>
+
+        <div class="evt_cont">
+            <div class="evt_inner">
+                <div class="evt_team">
+                    <img src="https://cdn-sp.kertn.net/assets/esport/000.png" alt="">>
+                    
+                </div>
+            </div>
+            <div class="evt_inner">
+                <div class="evt_team">
+                    <img src="https://cdn-sp.kertn.net/assets/esport/211524.png" alt="">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+
+
+<script>
+    let images = document.querySelectorAll('img')
+    images.forEach(i => {
+        console.log(i);
+        // i.src = "https://cdn-sp.kertn.net/assets/esport/211524.png"
+        i.onerror = null
+    })
+</script>
+</html>

@@ -1,0 +1,65 @@
+.evt_root{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    min-width: 0px;
+    width: 100%;
+    min-height: 0px;
+    align-items: center;
+    margin-bottom: var(--gap_xs);
+    border-radius: 8px;
+    background: var(--subHeaderBg);
+    color: var(--subHeaderTxt2);
+    transition: height 218ms ease-in-out;
+    background: var(--subHeaderBgHover);
+    color: var(--subHeaderTxt);
+}
+
+.evt_head {
+    display: flex;
+    min-width: 0px;
+    width: 100%;
+    height: 36px;
+    align-items: center;
+    font-size: 12px;
+    padding: 0 10px;
+}
+
+.es_head_inner{
+    display: flex;
+    min-width: 0px;
+    width: 100%;
+    height: 36px;
+    align-items: center;
+    font-size: 12px;
+    padding: 0 10px;
+}
+
+.evt_cont{
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 0px;
+    width: 100%;
+    min-height: 0px;
+    height: 0;
+    align-items: center;
+    justify-content: center;
+    transition: height 1314ms;
+    overflow: hidden;
+}
+
+
+.evt_inner{
+    background-color: var(--eventBg);
+    color: var(--eventTxt);
+    width: 100%;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    display: grid;
+    grid-template-rows: 30px 40px 32px;
+    grid-template-columns: 1fr 80px 1fr;
+}
+
+
