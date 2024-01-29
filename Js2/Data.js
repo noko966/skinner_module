@@ -80,7 +80,7 @@ let builderConfig = {
   dark: {
     body: {
       Background: {
-        color: "#222222 ",
+        color: "#222222",
         isActive: true,
         isDark: false,
       },

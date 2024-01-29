@@ -63,6 +63,16 @@ class Skinner2 {
     this.version = "2.0.0";
     this.tintsCount = 8;
 
+    this.skinnerControls = {};
+
+    this.UIColors = {
+      sk_bodyBg: "#1a1a1a",
+      sk_bodyBg2: "#2e2e2e",
+      sk_bodyBg3: "#585858",
+      sk_bodyTxt: "#ffffff",
+      sk_bodyTxt2: "#cccccc",
+    };
+
     this.defaults = {
       dark: {
         step: 1,
@@ -89,6 +99,8 @@ class Skinner2 {
     this.getConfigBlueprint = this.getConfigBlueprint.bind(this);
     this.generateConfigFromInput = this.generateConfigFromInput.bind(this);
     this.mergeConfig = this.mergeConfig.bind(this);
+
+    this.essenceSelector = {};
   }
 
   applyColorByNesting(essence) {
@@ -198,7 +210,7 @@ class Skinner2 {
       
     }
     .skinner_HTML_box_heading{
-      font-size: 20px;
+      font-size: 60px;
       text-transform: capitalize;
       font-weight: 700;
       text-align: left;
@@ -233,6 +245,12 @@ class Skinner2 {
     .skinner_HTML_box:last-child{
       border-bottom-left-radius: 8px;
       border-bottom-right-radius: 8px;
+    }
+
+    .pickr .pcr-button{
+      height: 42px;
+      width: 42px;
+      padding: 8px 12px;
     }
     `;
 
@@ -428,6 +446,8 @@ class Skinner2 {
   generateConfigMissingValues() {
     let self = this;
     function configFromParent(node) {
+      const n = node.name;
+      self.essenceSelector[n] = node;
       if (!node.cfg.Background.isActive) {
         let parentValue = node.parent.cfg.Background.color;
         let parentIsDark = self.TC(parentValue).isDark();
@@ -594,6 +614,7 @@ class Skinner2 {
 
     this.addHTMLVars();
     this.addHTMLDoomy();
+    this.createSkinnerUI();
     // this.setConfig(mergedConfigurations);
     // let body = this.rootNodes[0];
     // this.rootNodes.forEach((node) => {
@@ -601,5 +622,148 @@ class Skinner2 {
     // });
 
     // return mergedConfigurations;
+  }
+
+  createSkinnerControls(parent) {
+    let self = this;
+
+    function processNode(node) {
+      // Process the current node
+      const n = node.name;
+      const row = document.createElement("div");
+      row.style.display = "flex";
+      row.style.alignItems = "center";
+      const chb = self.createCheckbox(node, "Background", "isActive");
+      const cntrl = self.createPicker(node, "Background", "color");
+      parent.appendChild(row);
+      row.appendChild(chb);
+      row.appendChild(cntrl);
+      const ia = `isActive${node.name}`;
+      const bg = `bg${node.name}`;
+      self.skinnerControls[bg] = cntrl;
+      self.skinnerControls[ia] = chb;
+
+      // If the node has children, process each child
+      if (node.children && node.children.length > 0) {
+        node.children.forEach((child) => {
+          processNode(child); // Recursive call
+        });
+      }
+      return cntrl;
+    }
+
+    this.rootNodes.forEach((node) => {
+      processNode(node);
+    });
+
+    return self.skinnerControls;
+  }
+
+  updateEssence(node, grp, key, val) {
+    let self = this;
+    function processNode(node) {
+      node.cfg[grp][key] = val;
+      self.makeBackgrounds(node);
+      self.makeText(node);
+      // If the node has children, process each child
+      if (node.children && node.children.length > 0) {
+        node.children.forEach((child) => {
+          if (child.cfg.Background.isActive) {
+            processNode(child); // Recursive call
+          } else {
+            processNode(child); // Recursive call
+          }
+        });
+      }
+    }
+
+    processNode(node);
+
+    this.addHTMLVars();
+  }
+
+  createCheckbox(node, grp, key) {
+    let self = this;
+    let chb = document.createElement("input");
+    let n = node.name;
+    chb.type = "checkbox";
+    chb.id = `${n}${key}Checkbox`;
+    chb.checked = node.cfg[grp][key];
+
+    chb.addEventListener("change", (e) => {
+      self.updateEssence(node, grp, key, e.checked);
+    });
+
+    return chb;
+  }
+
+  createPicker(node, grp, key) {
+    let self = this;
+
+    const n = node.name;
+    let picker = document.createElement("button");
+    let pickerWrapper = document.createElement("div");
+
+    let configNode = this.essenceSelector[n];
+
+    let c = this.TC(configNode.cfg.Background.color).toHexString();
+    picker.style.background = c;
+    picker.style.width = "50px";
+    picker.style.height = "50px";
+    picker.id = `${n}${key}Picker`;
+    pickerWrapper.appendChild(picker);
+
+    self.createPickerControl(picker, c, (e) => {
+      self.updateEssence(node, grp, key, e.toHEXA().toString());
+    });
+
+    return pickerWrapper;
+  }
+
+  createPickerControl(el, defaultColor, callback) {
+    let picker = Pickr.create({
+      el: el,
+      theme: "classic",
+      comparison: false,
+      default: defaultColor,
+      components: {
+        preview: false,
+        hue: true,
+        interaction: {
+          //hex: false,
+          input: true,
+          save: false,
+        },
+      },
+    });
+
+    picker.on("change", (color, source, instance) => {
+      callback(color);
+    });
+    // picker.on("show", this.showOverlay);
+    // picker.on("hide", this.hideOverlay);
+
+    return picker;
+  }
+
+  createSkinnerUI() {
+    const UIwrapper = document.createElement("div");
+    UIwrapper.style.position = "fixed";
+    UIwrapper.style.left = "50%";
+    UIwrapper.style.bottom = "0";
+    UIwrapper.style.transform = "translateX(-50%)";
+    UIwrapper.style.background = this.UIColors.sk_bodyBg;
+    UIwrapper.style.color = this.UIColors.sk_bodyTxt;
+    UIwrapper.style.width = "600px";
+    UIwrapper.style.height = "300px";
+    UIwrapper.style.overflowY = "auto";
+    UIwrapper.style.borderRadius = "12px 12px 0 0";
+    // UIwrapper.style.padding = "12px 16px";
+
+    this.createSkinnerControls(UIwrapper);
+
+    document.body.appendChild(UIwrapper);
+
+    return UIwrapper;
   }
 }
