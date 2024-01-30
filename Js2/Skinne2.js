@@ -634,30 +634,25 @@ class Skinner2 {
     let self = this;
 
     function processNode(node) {
-      const vd = self.verbalData(node.name);
       // Process the current node
       const n = node.name;
       const row = document.createElement("div");
+      row.className = 'sk_ui_essence_row'
       const nameEl = document.createElement("span");
-      nameEl.innerText = n;
-      nameEl.style.fontSize = "1.1em";
-      nameEl.style.width = "100px";
-      nameEl.style.overflow = "hidden";
-      nameEl.style.textOverflow = "ellipsis";
-      nameEl.style.whiteSpace = "nowrap";
-      row.style.background = self.UIColors.sk_bodyBg2;
-      row.style.border = `1px solid ${self.UIColors.sk_bodyBg}`;
-      row.style.display = "flex";
-      row.style.alignItems = "center";
-      row.style.padding = "6px 12px";
+   
       const chb = self.createCheckbox(node, "Background", "isActive");
       const pickerInstance = self.createPicker(node, "Background", "color");
       const chb2 = self.createCheckbox(node, "Background", "isDark");
+
+      const group = document.createElement("div");
+      group.className = 'sk_ui_essence_row_group'
+
       parent.appendChild(row);
+      row.appendChild(group);
       row.appendChild(nameEl);
-      row.appendChild(chb);
-      row.appendChild(pickerInstance.wrapper);
-      row.appendChild(chb2);
+      group.appendChild(chb);
+      group.appendChild(pickerInstance.wrapper);
+      group.appendChild(chb2);
       node.controls = {};
       node.controls.isActive = chb;
       node.controls.bg = pickerInstance.imitator;
@@ -680,7 +675,9 @@ class Skinner2 {
   }
 
   updateControl(node){
+    const vd = this.verbalData(node.name);
     node.controls.bg.style.background = node.cfg.Background.color;
+    node.controls.bg.style.color = this.skin[vd.nameTxt];
     node.controls.bg.style.pointerEvents = node.cfg.Background.isActive ?  '' : 'none';
     node.controls.bg.style.opacity = node.cfg.Background.isActive ?  '1' : '0.4';
     // node.controls.isDark;
@@ -708,15 +705,12 @@ class Skinner2 {
 
   updateEssence(node, grp, key, val) {
     let self = this;
-    if(this.rootNodes.some(re => re.name === node.name)){
-      console.log('root');
-    }
     
     node.cfg[grp][key] = val;
     function processNode(node) {
-      self.updateControl(node)
       self.makeBackgrounds(node);
       self.makeText(node);
+      self.updateControl(node);
       if (node.children && node.children.length > 0) {
         node.children.forEach((child) => {
           processNode(child);
@@ -730,18 +724,26 @@ class Skinner2 {
   }
 
   createCheckbox(node, grp, key) {
-    let self = this;
-    let chb = document.createElement("input");
-    let n = node.name;
+    const self = this;
+    const chbWrapper = document.createElement("label");
+    const chb = document.createElement("input");
+    chb.className = 'sk_ui_chb_hide'
+    const n = node.name;
     chb.type = "checkbox";
     chb.id = `${n}${key}Checkbox`;
-    chb.style.width = '20px';
-    chb.style.height = '20px';
+    chbWrapper.htmlFor = `${n}${key}Checkbox`;
     chb.checked = node.cfg[grp][key];
+    const chbMock = document.createElement("div");
+    chbMock.className = 'sk_ui_action_mock'
+    chbWrapper.className = 'sk_ui_action';
+    chbWrapper.appendChild(chb)
+    chbWrapper.appendChild(chbMock)
+
     
+
     if(this.rootNodes.some(re => re.name === node.name) && key === 'isActive'){
-      chb.style.pointerEvents = 'none';
-      chb.style.opacity = '0.2';
+      chbWrapper.style.pointerEvents = 'none';
+      chbWrapper.style.opacity = '0.2';
     }
     else{
       chb.addEventListener("change", (e) => {
@@ -750,35 +752,33 @@ class Skinner2 {
     }
     
 
-    return chb;
+    return chbWrapper;
   }
 
   createPicker(node, grp, key) {
     let self = this;
-    let c = this.TC(node.cfg.Background.color).toHexString();
-
+    let bg = this.TC(node.cfg.Background.color).toHexString();
+    let txt = node.cfg.Text.color ? this.TC(node.cfg.Text.color).toHexString() :  this.TC.mostReadable(bg, ["#ffffff", "#000000"]).toHexString();
+   
     const n = node.name;
     let pickerImitator = document.createElement("div");
-    pickerImitator.style.background = c;
-    pickerImitator.style.width = "50px";
-    pickerImitator.style.height = "50px";
-    
+    pickerImitator.className='sk_ui_picker_action'
+    pickerImitator.style.background = bg;
+    pickerImitator.style.color = txt;
+    pickerImitator.innerText = node.name
     let pickerWrapper = document.createElement("div");
-
-    pickerWrapper.style.display = "flex";
-    pickerWrapper.style.alignItems = "center";
     // self.createPickerControl(picker, c, (e) => {
     //   self.updateEssence(node, grp, key, e.toHEXA().toString());
     // });
     let pickerEl = document.createElement("div");
-
+    pickerEl.className = 'sk_ui_picker_hidden'
     pickerImitator.addEventListener("click", (e) => {
       e.target.parentElement.appendChild(pickerEl)
       let _picker = Pickr.create({
         el: pickerEl,
         theme: "classic",
         comparison: false,
-        default: c,
+        default: bg,
         components: {
           preview: false,
           hue: true,
@@ -801,6 +801,7 @@ class Skinner2 {
     });
 
     pickerWrapper.appendChild(pickerImitator);
+    pickerWrapper.className='sk_ui_picker_wrapper'
     pickerWrapper.appendChild(pickerEl);
 
     return {
@@ -811,24 +812,17 @@ class Skinner2 {
 
   createSkinnerUI() {
     const UIroot = document.createElement("div");
-    UIroot.style.position = "fixed";
-    UIroot.style.left = "50%";
-    UIroot.style.bottom = "0";
-    UIroot.style.transform = "translateX(-50%)";
-    UIroot.style.background = this.UIColors.sk_bodyBg;
-    UIroot.style.color = this.UIColors.sk_bodyTxt;
-    UIroot.style.width = "420px";
-    UIroot.style.height = "300px";
+    UIroot.className = 'sk_ui_root'
 
-    UIroot.style.borderRadius = "8px 8px 0 0";
-
-    // UIwrapper.style.padding = "12px 16px";
+    const UIHeader = document.createElement("div");
+    UIHeader.className = 'sk_ui_header'
 
     const UIwrapper = document.createElement("div");
-    UIwrapper.style.overflowY = "auto";
-    UIwrapper.style.height = "100%";
+    UIwrapper.className = 'sk_ui_wrapper'
+
     this.createSkinnerControls(UIwrapper);
 
+    UIroot.appendChild(UIHeader);
     UIroot.appendChild(UIwrapper);
     document.body.appendChild(UIroot);
 

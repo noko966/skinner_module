@@ -1,75 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="styles/sport_doomy.css" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,700&display=swap"
-      rel="stylesheet"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="styles/sport_doomy.css" />
 
-    <link rel="stylesheet" href="Js2/picker.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,700&display=swap"
+    rel="stylesheet" />
 
-    <style>
-      .tree {
-        line-height: 1.5;
-      }
+  <link rel="stylesheet" href="Js2/picker.css" />
 
-      .node {
-        margin-left: 20px;
-        position: relative;
-      }
+  <style>
+    .tree {
+      line-height: 1.5;
+    }
 
-      .node::before {
-        content: "";
-        width: 20px;
-        border-left: 2px solid #000;
-        position: absolute;
-        left: -20px;
-        top: 0;
-        bottom: 0;
-      }
+    .node {
+      margin-left: 20px;
+      position: relative;
+    }
 
-      .node::after {
-        content: "";
-        width: 20px;
-        border-top: 2px solid #000;
-        position: absolute;
-        left: -20px;
-        top: 0;
-      }
+    .node::before {
+      content: "";
+      width: 20px;
+      border-left: 2px solid #000;
+      position: absolute;
+      left: -20px;
+      top: 0;
+      bottom: 0;
+    }
 
-      .children {
-        margin-top: 5px;
-      }
+    .node::after {
+      content: "";
+      width: 20px;
+      border-top: 2px solid #000;
+      position: absolute;
+      left: -20px;
+      top: 0;
+    }
 
-      .children .node:last-child::before {
-        height: 50%;
-      }
+    .children {
+      margin-top: 5px;
+    }
 
-      .children .node:first-child::before {
-        top: 50%;
-      }
-    </style>
-  </head>
+    .children .node:last-child::before {
+      height: 50%;
+    }
 
-  <body></body>
-  <script src="js2/picker.js"></script>
-  <script src="js2/TinyColor.js"></script>
-  <script src="Js2/Data.js"></script>
-  <script src="Js2/Skinne2.js"></script>
+    .children .node:first-child::before {
+      top: 50%;
+    }
 
-  <script>
-    // Usage example
-    let rootNodes = [body, accent, brand]; // Assuming these are your root nodes
-    let skinner = new Skinner2(builderConfig.dark, tinycolor, null, rootNodes);
-    skinner.init();
-    // skinner.applyColorByNesting("body");
-    // skinner.applyColorByNesting("oddActive");
-  </script>
+    :root {
+      --sk_ui_bg: #FEFFFA;
+      --sk_ui_bg2: #FFFEF8;
+      --sk_ui_bg3: #306391;
+      --sk_ui_bg4: #1b4365;
+      --sk_ui_txt: #10110E;
+      --sk_ui_txt2: #10110E;
+      --sk_ui_txt3: #FEFFFA;
+      --sk_ui_action_bg: #E3E9EE;
+      --sk_ui_action_txt: #10110E;
+    }
+
+    .sk_ui_action {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--sk_ui_action_bg);
+      color: var(--sk_ui_action_txt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sk_ui_chb_hide {
+      display: none;
+    }
+
+
+    .sk_ui_root {
+      position: fixed;
+      left: 50%;
+      bottom: 0px;
+      transform: translateX(-50%);
+
+      width: 600px;
+      height: 300px;
+      border-radius: 12px 12px 0px 0px;
+      box-shadow: 0px 1px 61px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .sk_ui_wrapper {
+      overflow-y: auto;
+      height: calc(100% - 44px);
+      padding: 10 4px;
+      background: var(--sk_ui_bg);
+      color: var(--sk_ui_txt);
+    }
+
+    .sk_ui_wrapper {
+      scrollbar-width: thin;
+      scrollbar-color: var(--sk_ui_bg3) var(--sk_ui_bg4);
+    }
+
+    .sk_ui_wrapper::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    .sk_ui_wrapper::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom right, var(--sk_ui_bg3) 0%, var(--sk_ui_bg4) 100%);
+      border-radius: 5px;
+    }
+
+    .sk_ui_wrapper::-webkit-scrollbar-track {
+      background-color:  var(--sk_ui_bg2);
+      border: 1px solid  var(--sk_ui_bg);
+    }
+
+    /* .sk_ui_wrapper::-webkit-scrollbar-button {
+      background-color: #4d7fff;
+      border-radius: 5px;
+    } */
+
+    .sk_ui_picker_action {
+      width: 110px;
+      height: 48px;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 6px;
+      opacity: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .sk_ui_picker_wrapper .pickr {
+      visibility: hidden;
+      width: 0px;
+      height: 0px;
+    }
+
+    .sk_ui_essence_row {
+      background: var(--sk_ui_bg2);
+      display: flex;
+      align-items: center;
+      padding: 12px 12px;
+      /* border-radius: 8px; */
+      /* box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, .6); */
+      border-bottom: 1px solid #f1f0e8;
+
+    }
+
+    .sk_ui_essence_row_group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--sk_ui_bg2);
+      border-radius: 8px;
+      box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, .6);
+      padding: 6px;
+    }
+
+    .sk_ui_header {
+      background: var(--sk_ui_bg3);
+      color: var(--sk_ui_txt3);
+      height: 44px;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .sk_ui_picker_wrapper {
+      position: relative;
+    }
+
+
+    .sk_ui_action_mock {
+      background: linear-gradient(-100deg, var(--sk_ui_bg3), var(--sk_ui_bg4));
+      border: none;
+      border-radius: 50%;
+      box-shadow: inset 0 1px 3px #a4c2dd, inset 0 -1px 3px #1e3951;
+      border: 3px solid #0e3b63;
+      width: 30px;
+      height: 30px;
+      position: relative;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .sk_ui_chb_hide:checked+.sk_ui_action_mock {
+      box-shadow: inset 0 1px 3px #0a1a29, inset 0 -1px 3px #697a89;
+      background: linear-gradient(90deg, #10314f, #254f73);
+      border-color: #169728;
+    }
+  </style>
+</head>
+
+<body></body>
+<script src="js2/picker.js"></script>
+<script src="js2/TinyColor.js"></script>
+<script src="Js2/Data.js"></script>
+<script src="Js2/Skinne2.js"></script>
+
+<script>
+  // Usage example
+  let rootNodes = [body, accent, brand]; // Assuming these are your root nodes
+  let skinner = new Skinner2(builderConfig.dark, tinycolor, null, rootNodes);
+  skinner.init();
+  // skinner.applyColorByNesting("body");
+  // skinner.applyColorByNesting("oddActive");
+</script>
+
 </html>
