@@ -75,11 +75,11 @@ class Skinner2 {
 
     this.defaults = {
       dark: {
-        step: 1,
+        step: 2,
         bgHov: 3,
       },
       light: {
-        step: 1,
+        step: 2,
         bg3: 8,
         bgHov: 3,
       },
@@ -202,9 +202,9 @@ class Skinner2 {
     }
     .skinner_HTML_container {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-gap: 16px;
-      padding: 16px;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-gap: 8px;
+      padding: 8px;
       font-family: 'Nunito Sans', sans-serif;
       background: var(--bodyBg);
       
@@ -280,8 +280,6 @@ class Skinner2 {
 
     function addHTMLGroup(node) {
       let vd = self.verbalData(node.name);
-
-      // Create a style element
 
       let essenceContainer = document.createElement("div");
       essenceContainer.className = "skinner_HTML_box_container";
@@ -555,28 +553,28 @@ class Skinner2 {
   makeBackgrounds(node) {
     let tc = this.TC;
     let cfg = node.cfg;
-    let startColor = cfg.Background.color;
-    let isDark = cfg.Background.color.isDark;
+    let isDark = cfg.Background.isDark;
     let vd = this.verbalData(node.name);
 
     const tintsCount = this.tintsCount;
-    if(node.cfg.Background.isActive){
-      let bg =  node.cfg.Background.color;
+    if (node.cfg.Background.isActive) {
+      let bg = node.cfg.Background.color;
       this.skin[vd.nameBg] = tc(bg).toHexString();
       this.skin[vd.nameBg1] = tc(bg).toHexString();
-    }
-    else{
-      let bgParent =  node.parent.cfg.Background.color;
+    } else {
+      console.log(node.parent.cfg.Background, node.name);
+      const vd = this.verbalData(node.parent.name);
+      let bgParent = vd["nameBg2"];
       this.skin[vd.nameBg] = tc(bgParent).toHexString();
       this.skin[vd.nameBg1] = tc(bgParent).toHexString();
     }
     for (let i = 2; i < tintsCount; i++) {
       this.skin[vd[`nameBg${i}`]] = isDark
         ? tc(this.skin[vd[`nameBg${i - 1}`]])
-            .lighten(this.defaults.light.step)
+            .darken(this.defaults.dark.step)
             .toHexString()
         : tc(this.skin[vd[`nameBg${i - 1}`]])
-            .darken(this.defaults.light.step)
+            .lighten(this.defaults.light.step)
             .toHexString();
     }
   }
@@ -642,32 +640,28 @@ class Skinner2 {
       const row = document.createElement("div");
       const nameEl = document.createElement("span");
       nameEl.innerText = n;
-      nameEl.style.fontSize = '1.4em';
-      nameEl.style.width = '100px';
-      nameEl.style.overflow = 'hidden';
-      nameEl.style.textOverflow = 'ellipsis';
-      nameEl.style.whiteSpace = 'nowrap';
+      nameEl.style.fontSize = "1.4em";
+      nameEl.style.width = "100px";
+      nameEl.style.overflow = "hidden";
+      nameEl.style.textOverflow = "ellipsis";
+      nameEl.style.whiteSpace = "nowrap";
       row.style.background = self.UIColors.sk_bodyBg2;
       row.style.border = `1px solid ${self.UIColors.sk_bodyBg}`;
       row.style.display = "flex";
       row.style.alignItems = "center";
       row.style.padding = "6px 12px";
       const chb = self.createCheckbox(node, "Background", "isActive");
-      const cntrl = self.createPicker(node, "Background", "color");
+      const pickerInstance = self.createPicker(node, "Background", "color");
       const chb2 = self.createCheckbox(node, "Background", "isDark");
       parent.appendChild(row);
       row.appendChild(nameEl);
       row.appendChild(chb);
-      row.appendChild(cntrl);
+      row.appendChild(pickerInstance.wrapper);
       row.appendChild(chb2);
-      const ia = `isActive${node.name}`;
-      const bg = `bg${node.name}`;
-      self.skinnerControls[bg] = cntrl;
-      self.skinnerControls[ia] = chb;
       node.controls = {};
-      node.controls[vd.isName] = chb;
-      node.controls[vd.nameBg] = cntrl;
-      node.controls[vd.isDark] = chb2;
+      node.controls.isActive = chb;
+      node.controls.bg = pickerInstance.imitator;
+      node.controls.isDark = chb2;
 
       // If the node has children, process each child
       if (node.children && node.children.length > 0) {
@@ -675,27 +669,27 @@ class Skinner2 {
           processNode(child); // Recursive call
         });
       }
-      return cntrl;
+      return true;
     }
 
     this.rootNodes.forEach((node) => {
       processNode(node);
     });
 
-    return self.skinnerControls;
+    return true;
   }
 
   updateEssence(node, grp, key, val) {
     let self = this;
     function processNode(node) {
       node.cfg[grp][key] = val;
+      node.controls.bg.style.background = node.cfg.Background.color;
       self.makeBackgrounds(node);
       self.makeText(node);
       // If the node has children, process each child
       if (node.children && node.children.length > 0) {
         node.children.forEach((child) => {
           processNode(child);
-          
         });
       }
     }
@@ -722,25 +716,34 @@ class Skinner2 {
 
   createPicker(node, grp, key) {
     let self = this;
+    let c = this.TC(node.cfg.Background.color).toHexString();
 
     const n = node.name;
+    let pickerImitator = document.createElement("div");
+    pickerImitator.style.background = c;
+    pickerImitator.style.width = "50px";
+    pickerImitator.style.height = "50px";
     let picker = document.createElement("button");
     let pickerWrapper = document.createElement("div");
 
-    let configNode = this.essenceSelector[n];
-
-    let c = this.TC(configNode.cfg.Background.color).toHexString();
     picker.style.background = c;
     picker.style.width = "50px";
     picker.style.height = "50px";
     picker.id = `${n}${key}Picker`;
-    pickerWrapper.appendChild(picker);
 
+    pickerWrapper.style.display = "flex";
+    pickerWrapper.style.alignItems = "center";
+    pickerWrapper.appendChild(pickerImitator);
+    pickerWrapper.appendChild(picker);
     self.createPickerControl(picker, c, (e) => {
       self.updateEssence(node, grp, key, e.toHEXA().toString());
     });
 
-    return pickerWrapper;
+    return {
+      wrapper: pickerWrapper,
+      imitator: pickerImitator,
+      pickr: picker,
+    };
   }
 
   createPickerControl(el, defaultColor, callback) {
@@ -770,23 +773,28 @@ class Skinner2 {
   }
 
   createSkinnerUI() {
-    const UIwrapper = document.createElement("div");
-    UIwrapper.style.position = "fixed";
-    UIwrapper.style.left = "50%";
-    UIwrapper.style.bottom = "0";
-    UIwrapper.style.transform = "translateX(-50%)";
-    UIwrapper.style.background = this.UIColors.sk_bodyBg;
-    UIwrapper.style.color = this.UIColors.sk_bodyTxt;
-    UIwrapper.style.width = "420px";
-    UIwrapper.style.height = "300px";
-    UIwrapper.style.overflowY = "auto";
-    UIwrapper.style.borderRadius = "8px 8px 0 0";
+    const UIroot = document.createElement("div");
+    UIroot.style.position = "fixed";
+    UIroot.style.left = "50%";
+    UIroot.style.bottom = "0";
+    UIroot.style.transform = "translateX(-50%)";
+    UIroot.style.background = this.UIColors.sk_bodyBg;
+    UIroot.style.color = this.UIColors.sk_bodyTxt;
+    UIroot.style.width = "420px";
+    UIroot.style.height = "300px";
+
+    UIroot.style.borderRadius = "8px 8px 0 0";
+
     // UIwrapper.style.padding = "12px 16px";
 
+    const UIwrapper = document.createElement("div");
+    UIwrapper.style.overflowY = "auto";
+    UIwrapper.style.height = "100%";
     this.createSkinnerControls(UIwrapper);
 
-    document.body.appendChild(UIwrapper);
+    UIroot.appendChild(UIwrapper);
+    document.body.appendChild(UIroot);
 
-    return UIwrapper;
+    return UIroot;
   }
 }
