@@ -96,7 +96,6 @@ class Skinner2 {
       },
     };
 
-    this.getConfigBlueprint = this.getConfigBlueprint.bind(this);
     this.generateConfigFromInput = this.generateConfigFromInput.bind(this);
     this.mergeConfig = this.mergeConfig.bind(this);
 
@@ -157,7 +156,6 @@ class Skinner2 {
         getComputedStyle(element).padding !== "0px" ||
         getComputedStyle(element).gap !== "0px" ||
         getComputedStyle(element).gridGap !== "0px";
-
 
       let lvl = level % colors.length;
       let lvlShift = (level - 1) % colors.length;
@@ -320,6 +318,12 @@ class Skinner2 {
         essenceContainer.appendChild(bg);
       }
 
+      let essenceAccentBg = document.createElement("div");
+      essenceAccentBg.className = `skinner_HTML_box`;
+      essenceAccentBg.style.backgroundColor = `var(--${vd["nameAccent"]})`;
+
+      essenceContainer.appendChild(essenceAccentBg);
+
       if (node.children && node.children.length > 0) {
         node.children.forEach((child) => {
           addHTMLGroup(child); // Recursive call
@@ -362,6 +366,8 @@ class Skinner2 {
       styles += `--${vd["nameTxt2"]}: ${self.skin[vd["nameTxt2"]]};\n`;
       styles += `--${vd["nameTxt3"]}: ${self.skin[vd["nameTxt3"]]};\n`;
 
+      styles += `--${vd["nameAccent"]}: ${self.skin[vd["nameAccent"]]};\n`;
+
       if (node.children && node.children.length > 0) {
         node.children.forEach((child) => {
           addVariableGroup(child); // Recursive call
@@ -377,33 +383,6 @@ class Skinner2 {
 
     // Append the style element to the head of the document
     document.head.appendChild(style);
-  }
-
-  getConfigBlueprint() {
-    return {
-      Background: {
-        isActive: false,
-        color: "#19C950",
-      },
-      Gradient: {
-        angle: 0,
-        isActive: false,
-        color: "#1703A2",
-      },
-      Text: {
-        isActive: false,
-        color: "#611BCD",
-      },
-      Accent: {
-        isActive: false,
-        color: "#F022FE",
-      },
-      Border: {
-        isActive: false,
-        color: "#AC23F7",
-      },
-      borderRadius: 6,
-    };
   }
 
   generateConfigFromInput(node) {
@@ -534,8 +513,9 @@ class Skinner2 {
   makeColorPalette() {
     let self = this;
     function processNode(node) {
-      self.updateControl(node)
+      self.updateControl(node);
       self.makeBackgrounds(node);
+      self.makeAccents(node);
       self.makeText(node);
       if (node.children && node.children.length > 0) {
         node.children.forEach((child) => {
@@ -563,7 +543,7 @@ class Skinner2 {
       this.skin[vd.nameBg1] = tc(bg).toHexString();
     } else {
       const vdf = this.verbalData(node.parent.name);
-      let bgParent = this.skin[vdf['nameBg2']];
+      let bgParent = this.skin[vdf["nameBg2"]];
       isDark = node.parent.cfg.Background.isDark;
       this.skin[vd.nameBg] = tc(bgParent).toHexString();
       this.skin[vd.nameBg1] = tc(bgParent).toHexString();
@@ -571,11 +551,40 @@ class Skinner2 {
     for (let i = 2; i < tintsCount; i++) {
       this.skin[vd[`nameBg${i}`]] = isDark
         ? tc(this.skin[vd[`nameBg${i - 1}`]])
-          .darken(this.defaults.dark.step)
-          .toHexString()
+            .darken(this.defaults.dark.step)
+            .toHexString()
         : tc(this.skin[vd[`nameBg${i - 1}`]])
-          .lighten(this.defaults.light.step)
-          .toHexString();
+            .lighten(this.defaults.light.step)
+            .toHexString();
+    }
+  }
+
+  makeAccents(node) {
+    let tc = this.TC;
+    let vd = this.verbalData(node.name);
+
+    if (node.cfg.Accent.isActive) {
+      let ac = node.cfg.Accent.color;
+      this.skin[vd.nameAccent] = tc(ac).toHexString();
+    } else {
+      if (this.rootNodes.some((re) => re.name === node.name)) {
+        let acParent;
+        switch (node.name) {
+          case "accent":
+            acParent = this.rootNodes[0].cfg.Background.color;
+            break;
+          case "brand":
+            acParent = this.rootNodes[0].cfg.Background.color;
+            break;
+          default:
+            acParent = this.rootNodes[2].cfg.Background.color;
+            break;
+        }
+        this.skin[vd.nameAccent] = tc(acParent).toHexString();
+      }
+      // const vdf = this.verbalData(node.parent.name);
+      // let acParent = this.skin[vdf["nameAccent"]];
+      // this.skin[vd.nameAccent] = tc(acParent).toHexString();
     }
   }
 
@@ -635,28 +644,41 @@ class Skinner2 {
 
     function processNode(node) {
       // Process the current node
-      const n = node.name;
       const row = document.createElement("div");
-      row.className = 'sk_ui_essence_row'
+      row.className = "sk_ui_essence_row";
       const nameEl = document.createElement("span");
-   
-      const chb = self.createCheckbox(node, "Background", "isActive");
-      const pickerInstance = self.createPicker(node, "Background", "color");
-      const chb2 = self.createCheckbox(node, "Background", "isDark");
-
-      const group = document.createElement("div");
-      group.className = 'sk_ui_essence_row_group'
-
       parent.appendChild(row);
-      row.appendChild(group);
+      nameEl.innerText = node.name;
+      nameEl.className = "sk_ui_essence_row_name";
+      const grpBg = document.createElement("div");
+      grpBg.className = "sk_ui_essence_row_group";
+      const chbBg = self.createCheckbox(node, "Background", "isActive");
+      const pickerBg = self.createPicker(node, "Background", "color");
+      const chbDark = self.createCheckbox(node, "Background", "isDark");
       row.appendChild(nameEl);
-      group.appendChild(chb);
-      group.appendChild(pickerInstance.wrapper);
-      group.appendChild(chb2);
+      row.appendChild(grpBg);
+      grpBg.appendChild(chbBg);
+      grpBg.appendChild(pickerBg.wrapper);
+      grpBg.appendChild(chbDark);
+
+      const grpAccent = document.createElement("div");
+      grpAccent.className = "sk_ui_essence_row_group";
+      const chbAccent = self.createCheckbox(node, "Accent", "isActive");
+      const pickerAccent = self.createPicker(node, "Accent", "color");
+      grpAccent.appendChild(chbAccent);
+      grpAccent.appendChild(pickerAccent.wrapper);
+      row.appendChild(grpAccent);
+
       node.controls = {};
-      node.controls.isActive = chb;
-      node.controls.bg = pickerInstance.imitator;
-      node.controls.isDark = chb2;
+      node.controls.Background = {};
+      node.controls.Background.isActive = chbBg;
+      node.controls.Background.color = pickerBg.imitator;
+      node.controls.Background.isDark = chbDark;
+
+      node.controls.Accent = {};
+
+      node.controls.Accent.isActive = chbAccent;
+      node.controls.Accent.color = pickerAccent.imitator;
 
       // If the node has children, process each child
       if (node.children && node.children.length > 0) {
@@ -674,13 +696,23 @@ class Skinner2 {
     return true;
   }
 
-  updateControl(node){
-    const vd = this.verbalData(node.name);
-    node.controls.bg.style.background = node.cfg.Background.color;
-    node.controls.bg.style.color = this.skin[vd.nameTxt];
-    node.controls.bg.style.pointerEvents = node.cfg.Background.isActive ?  '' : 'none';
-    node.controls.bg.style.opacity = node.cfg.Background.isActive ?  '1' : '0.4';
-    // node.controls.isDark;
+  updateControl(node) {
+    node.controls.Background.color.style.background = node.cfg.Background.color;
+    node.controls.Background.color.style.pointerEvents = node.cfg.Background
+      .isActive
+      ? ""
+      : "none";
+    node.controls.Background.color.style.opacity = node.cfg.Background.isActive
+      ? "1"
+      : "0.8";
+
+    node.controls.Accent.color.style.background = node.cfg.Accent.color;
+    node.controls.Accent.color.style.pointerEvents = node.cfg.Accent.isActive
+      ? ""
+      : "none";
+    node.controls.Accent.color.style.opacity = node.cfg.Accent.isActive
+      ? "1"
+      : "0.8";
   }
 
   // updateControls(){
@@ -705,11 +737,13 @@ class Skinner2 {
 
   updateEssence(node, grp, key, val) {
     let self = this;
-    
+
     node.cfg[grp][key] = val;
     function processNode(node) {
       self.makeBackgrounds(node);
+      self.makeAccents(node);
       self.makeText(node);
+
       self.updateControl(node);
       if (node.children && node.children.length > 0) {
         node.children.forEach((child) => {
@@ -727,30 +761,29 @@ class Skinner2 {
     const self = this;
     const chbWrapper = document.createElement("label");
     const chb = document.createElement("input");
-    chb.className = 'sk_ui_chb_hide'
+    chb.className = "sk_ui_chb_hide";
     const n = node.name;
     chb.type = "checkbox";
-    chb.id = `${n}${key}Checkbox`;
-    chbWrapper.htmlFor = `${n}${key}Checkbox`;
+    chb.id = `${n}${grp}${key}Checkbox`;
+    chbWrapper.htmlFor = `${n}${grp}${key}Checkbox`;
     chb.checked = node.cfg[grp][key];
     const chbMock = document.createElement("div");
-    chbMock.className = 'sk_ui_action_mock'
-    chbWrapper.className = 'sk_ui_action';
-    chbWrapper.appendChild(chb)
-    chbWrapper.appendChild(chbMock)
+    chbMock.className = "sk_ui_action_mock";
+    chbWrapper.className = "sk_ui_action";
+    chbWrapper.appendChild(chb);
+    chbWrapper.appendChild(chbMock);
 
-    
-
-    if(this.rootNodes.some(re => re.name === node.name) && key === 'isActive'){
-      chbWrapper.style.pointerEvents = 'none';
-      chbWrapper.style.opacity = '0.2';
-    }
-    else{
+    if (
+      this.rootNodes.some((re) => re.name === node.name) &&
+      key === "isActive"
+    ) {
+      chbWrapper.style.pointerEvents = "none";
+      chbWrapper.style.opacity = "0.2";
+    } else {
       chb.addEventListener("change", (e) => {
         self.updateEssence(node, grp, key, e.currentTarget.checked);
       });
     }
-    
 
     return chbWrapper;
   }
@@ -758,22 +791,24 @@ class Skinner2 {
   createPicker(node, grp, key) {
     let self = this;
     let bg = this.TC(node.cfg.Background.color).toHexString();
-    let txt = node.cfg.Text.color ? this.TC(node.cfg.Text.color).toHexString() :  this.TC.mostReadable(bg, ["#ffffff", "#000000"]).toHexString();
-   
+    let txt = node.cfg.Text.color
+      ? this.TC(node.cfg.Text.color).toHexString()
+      : this.TC.mostReadable(bg, ["#ffffff", "#000000"]).toHexString();
+
     const n = node.name;
     let pickerImitator = document.createElement("div");
-    pickerImitator.className='sk_ui_picker_action'
+    pickerImitator.className = "sk_ui_picker_action";
     pickerImitator.style.background = bg;
     pickerImitator.style.color = txt;
-    pickerImitator.innerText = node.name
+
     let pickerWrapper = document.createElement("div");
     // self.createPickerControl(picker, c, (e) => {
     //   self.updateEssence(node, grp, key, e.toHEXA().toString());
     // });
     let pickerEl = document.createElement("div");
-    pickerEl.className = 'sk_ui_picker_hidden'
+    pickerEl.className = "sk_ui_picker_hidden";
     pickerImitator.addEventListener("click", (e) => {
-      e.target.parentElement.appendChild(pickerEl)
+      e.target.parentElement.appendChild(pickerEl);
       let _picker = Pickr.create({
         el: pickerEl,
         theme: "classic",
@@ -791,17 +826,16 @@ class Skinner2 {
       });
 
       _picker.show();
-      _picker.on('change', (color, source, instance) => {
+      _picker.on("change", (color, source, instance) => {
         self.updateEssence(node, grp, key, color.toHEXA().toString());
-      })
-      _picker.on('hide', instance => {
-        instance.destroyAndRemove()
-      })
-
+      });
+      _picker.on("hide", (instance) => {
+        instance.destroyAndRemove();
+      });
     });
 
     pickerWrapper.appendChild(pickerImitator);
-    pickerWrapper.className='sk_ui_picker_wrapper'
+    pickerWrapper.className = "sk_ui_picker_wrapper";
     pickerWrapper.appendChild(pickerEl);
 
     return {
@@ -812,13 +846,13 @@ class Skinner2 {
 
   createSkinnerUI() {
     const UIroot = document.createElement("div");
-    UIroot.className = 'sk_ui_root'
+    UIroot.className = "sk_ui_root";
 
     const UIHeader = document.createElement("div");
-    UIHeader.className = 'sk_ui_header'
+    UIHeader.className = "sk_ui_header";
 
     const UIwrapper = document.createElement("div");
-    UIwrapper.className = 'sk_ui_wrapper'
+    UIwrapper.className = "sk_ui_wrapper";
 
     this.createSkinnerControls(UIwrapper);
 

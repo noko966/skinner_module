@@ -1,231 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="styles/sport_doomy.css" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <link rel="stylesheet" href="styles/sport_doomy.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,700&display=swap"
+      rel="stylesheet"
+    />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,700&display=swap"
-    rel="stylesheet" />
+    <link rel="stylesheet" href="Js2/picker.css" />
 
-  <link rel="stylesheet" href="Js2/picker.css" />
+    <style>
+      .tree {
+        line-height: 1.5;
+      }
 
-  <style>
-    .tree {
-      line-height: 1.5;
-    }
+      .node {
+        margin-left: 20px;
+        position: relative;
+      }
 
-    .node {
-      margin-left: 20px;
-      position: relative;
-    }
+      .node::before {
+        content: "";
+        width: 20px;
+        border-left: 2px solid #000;
+        position: absolute;
+        left: -20px;
+        top: 0;
+        bottom: 0;
+      }
 
-    .node::before {
-      content: "";
-      width: 20px;
-      border-left: 2px solid #000;
-      position: absolute;
-      left: -20px;
-      top: 0;
-      bottom: 0;
-    }
+      .node::after {
+        content: "";
+        width: 20px;
+        border-top: 2px solid #000;
+        position: absolute;
+        left: -20px;
+        top: 0;
+      }
 
-    .node::after {
-      content: "";
-      width: 20px;
-      border-top: 2px solid #000;
-      position: absolute;
-      left: -20px;
-      top: 0;
-    }
+      .children {
+        margin-top: 5px;
+      }
 
-    .children {
-      margin-top: 5px;
-    }
+      .children .node:last-child::before {
+        height: 50%;
+      }
 
-    .children .node:last-child::before {
-      height: 50%;
-    }
+      .children .node:first-child::before {
+        top: 50%;
+      }
 
-    .children .node:first-child::before {
-      top: 50%;
-    }
+      :root {
+        --sk_ui_body_bg: #343549;
+        --sk_ui_body_bg2: #454660;
+        --sk_ui_body_txt: #fff;
+        --sk_ui_body_txt2: #b1b2d6;
+        --sk_ui_accent_bg: #8866e9;
+        --sk_ui_accent_txt: #fff;
+      }
 
-    :root {
-      --sk_ui_body_bg: #343549;
-      --sk_ui_body_bg2: #454660;
-      --sk_ui_body_txt: #fff;
-      --sk_ui_body_txt: #b1b2d6;
-      --sk_ui_accent_bg: #8866e9;
-      --sk_ui_accent_txt: #fff;
-      
-    }
+      .sk_ui_action {
+        width: 40px;
+        /* height: 40px; */
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-    .sk_ui_action {
-      width: 40px;
-      /* height: 40px; */
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+      .sk_ui_chb_hide {
+        display: none;
+      }
 
-    .sk_ui_chb_hide {
-      display: none;
-    }
+      .sk_ui_root {
+        position: fixed;
+        left: 50%;
+        bottom: 0px;
+        transform: translateX(-50%);
 
+        width: 600px;
+        height: 300px;
+        border-radius: 12px 12px 0px 0px;
+        box-shadow: 0px 1px 61px 20px rgba(0, 0, 0, 0.5);
+      }
 
-    .sk_ui_root {
-      position: fixed;
-      left: 50%;
-      bottom: 0px;
-      transform: translateX(-50%);
+      .sk_ui_wrapper {
+        overflow-y: auto;
+        height: calc(100% - 44px);
+        /* padding: 10px 4px; */
+        background: var(--sk_ui_body_bg);
+        color: var(--sk_ui_txt);
+      }
 
-      width: 600px;
-      height: 300px;
-      border-radius: 12px 12px 0px 0px;
-      box-shadow: 0px 1px 61px 20px rgba(0, 0, 0, 0.5);
-    }
+      .sk_ui_wrapper {
+        scrollbar-width: thin;
+        scrollbar-color: var(--sk_ui_bg3) var(--sk_ui_bg4);
+      }
 
-    .sk_ui_wrapper {
-      overflow-y: auto;
-      height: calc(100% - 44px);
-      padding: 10px 4px;
-      background: var(--sk_ui_body_bg);
-      color: var(--sk_ui_txt);
-    }
+      .sk_ui_wrapper::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+      }
 
-    .sk_ui_wrapper {
-      scrollbar-width: thin;
-      scrollbar-color: var(--sk_ui_bg3) var(--sk_ui_bg4);
-    }
+      .sk_ui_wrapper::-webkit-scrollbar-thumb {
+        background: linear-gradient(
+          to bottom right,
+          var(--sk_ui_bg3) 0%,
+          var(--sk_ui_bg4) 100%
+        );
+        border-radius: 5px;
+      }
 
-    .sk_ui_wrapper::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-    }
+      .sk_ui_wrapper::-webkit-scrollbar-track {
+        background-color: var(--sk_ui_bg2);
+        border: 1px solid var(--sk_ui_bg);
+      }
 
-    .sk_ui_wrapper::-webkit-scrollbar-thumb {
-      background: linear-gradient(to bottom right, var(--sk_ui_bg3) 0%, var(--sk_ui_bg4) 100%);
-      border-radius: 5px;
-    }
-
-    .sk_ui_wrapper::-webkit-scrollbar-track {
-      background-color:  var(--sk_ui_bg2);
-      border: 1px solid  var(--sk_ui_bg);
-    }
-
-    /* .sk_ui_wrapper::-webkit-scrollbar-button {
+      /* .sk_ui_wrapper::-webkit-scrollbar-button {
       background-color: #4d7fff;
       border-radius: 5px;
     } */
 
-    .sk_ui_picker_action {
-      width: 110px;
-      height: 48px;
-      box-shadow: inset 0px 0px 0px 2px white;
-      font-size: 16px;
-      font-weight: 500;
-      border-radius: 6px;
-      opacity: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
+      .sk_ui_picker_action {
+        width: 32px;
+        height: 32px;
+        box-shadow: inset 0px 0px 0px 2px white;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 50%;
+        opacity: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
 
-    .sk_ui_picker_wrapper .pickr {
-      visibility: hidden;
-      width: 0px;
-      height: 0px;
-    }
+      .sk_ui_picker_wrapper .pickr {
+        visibility: hidden;
+        width: 0px;
+        height: 0px;
+      }
 
-    .sk_ui_essence_row {
-      background: var(--sk_ui_body_bg);
-      display: flex;
-      align-items: center;
-      padding: 12px 12px;
-      /* border-radius: 8px; */
-      /* box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, .6); */
-      border-bottom: 1px solid var(--sk_ui_body_bg2);
+      .sk_ui_essence_row {
+        background: var(--sk_ui_body_bg);
+        display: flex;
+        align-items: center;
+        padding: 4px 8px;
+        /* border-radius: 8px; */
+        /* box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, .6); */
+        border-bottom: 1px solid var(--sk_ui_body_bg2);
+      }
 
-    }
+      .sk_ui_essence_row_group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--sk_ui_bg2);
+        border-radius: 8px;
+        box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.6);
+        padding: 6px;
+      }
 
-    .sk_ui_essence_row_group {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--sk_ui_bg2);
-      border-radius: 8px;
-      box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, .6);
-      padding: 6px;
-    }
+      .sk_ui_header {
+        background: var(--sk_ui_body_bg2);
+        color: var(--sk_ui_body_txt);
+        height: 44px;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+      }
 
-    .sk_ui_header {
-      background: var(--sk_ui_body_bg2);
-      color: var(--sk_ui_body_txt);
-      height: 44px;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-    }
+      .sk_ui_picker_wrapper {
+        position: relative;
+        margin: 0 6px;
+      }
 
-    .sk_ui_picker_wrapper {
-      position: relative;
-    }
+      .sk_ui_action_mock {
+        width: 40px;
+        height: 20px;
+        background: var(--m-03);
+        box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.3),
+          3px 5px 20px rgba(0, 0, 0, 0.2);
+        border-radius: 30px;
+        transition: all 0.2s ease;
+        position: relative;
+        cursor: pointer;
+      }
 
+      .sk_ui_action_mock::before {
+        position: absolute;
+        content: "";
+        width: 16px;
+        height: 16px;
+        background: white;
+        border-radius: 100%;
+        top: 2px;
+        left: 2px;
+        transition: all 0.4s cubic-bezier(0.99, 0.01, 0.29, 1.24);
+        transform: translateX(0px);
+        box-shadow: 1px 1px 7px rgba(52, 53, 73, 0.4),
+          inset 3px 2px 5px rgba(69, 70, 96, 0.3);
+      }
 
-    .sk_ui_action_mock {
-      width: 40px;
-    height: 20px;
-    background: var(--m-03);
-    box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.3), 3px 5px 20px rgba(0, 0, 0, 0.2);
-    border-radius: 30px;
-    transition: all 0.2s ease;
-    position: relative;
-    cursor: pointer;
-    }
+      .sk_ui_chb_hide:checked + .sk_ui_action_mock {
+        background: var(--sk_ui_accent_bg);
+      }
 
-    .sk_ui_action_mock::before{
-      position: absolute;
-    content: "";
-    width: 16px;
-    height: 16px;
-    background: white;
-    border-radius: 100%;
-    top: 2px;
-    left: 2px;
-    transition: all 0.4s cubic-bezier(0.99, 0.01, 0.29, 1.24);
-    transform: translateX(0px);
-    box-shadow: 1px 1px 7px rgba(52, 53, 73, 0.4), inset 3px 2px 5px rgba(69, 70, 96, 0.3);
-    }
+      .sk_ui_chb_hide:checked + .sk_ui_action_mock::before {
+        transform: translateX(20px);
+      }
 
-    .sk_ui_chb_hide:checked+.sk_ui_action_mock {
-      background: var(--sk_ui_accent_bg);
-    }
+      .sk_ui_essence_row_name {
+        color: var(--sk_ui_body_txt2);
+        font-size: 13px;
+        width: 100px;
+        text-align: center;
+        text-transform: capitalize;
+      }
+    </style>
+  </head>
 
-    .sk_ui_chb_hide:checked+.sk_ui_action_mock::before{
-      transform: translateX(20px);
-    }
-  </style>
-</head>
+  <body></body>
+  <script src="js2/picker.js"></script>
+  <script src="js2/TinyColor.js"></script>
+  <script src="Js2/Data.js"></script>
+  <script src="Js2/Skinne2.js"></script>
 
-<body></body>
-<script src="js2/picker.js"></script>
-<script src="js2/TinyColor.js"></script>
-<script src="Js2/Data.js"></script>
-<script src="Js2/Skinne2.js"></script>
-
-<script>
-  // Usage example
-  let rootNodes = [body, accent, brand]; // Assuming these are your root nodes
-  let skinner = new Skinner2(builderConfig.dark, tinycolor, null, rootNodes);
-  skinner.init();
-  // skinner.applyColorByNesting("body");
-  // skinner.applyColorByNesting("oddActive");
-</script>
-
+  <script>
+    // Usage example
+    let rootNodes = [body, accent, brand]; // Assuming these are your root nodes
+    let skinner = new Skinner2(builderConfig.dark, tinycolor, null, rootNodes);
+    skinner.init();
+    // skinner.applyColorByNesting("body");
+    // skinner.applyColorByNesting("oddActive");
+  </script>
 </html>
